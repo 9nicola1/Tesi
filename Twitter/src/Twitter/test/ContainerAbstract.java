@@ -25,7 +25,7 @@ public abstract class ContainerAbstract {
 		cB.setDebugEnabled(true)
 			.setOAuthConsumerKey(APIKey) 			//Application Settings/Consumer Key (API key)
 			.setOAuthConsumerSecret(APISecret)//Application Settings/Consumer Secret (API Secret)
-			.setOAuth2AccessToken(AccessToken) 			     	 //Your Access Token/Access Token
+			.setOAuthAccessToken(AccessToken) 			     	 //Your Access Token/Access Token
 			.setOAuthAccessTokenSecret(AccessTokenSecret);//Your Access Token/Access Token Secret
 		
 		tF=new TwitterFactory(cB.build());

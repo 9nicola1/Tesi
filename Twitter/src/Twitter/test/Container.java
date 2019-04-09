@@ -1,5 +1,6 @@
 package Twitter.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.HashtagEntity;
@@ -28,19 +29,20 @@ public class Container extends ContainerAbstract{
 	@Override
 	protected List<Status> getKeyStatus(List<String> keyWords) throws TwitterException {
 		List<Status> status=twitter.getHomeTimeline();
+		List<Status> statusRet=new ArrayList<Status>();
 		for(Status s:status) {
 			String ss=s.getText();
-			boolean contain=false;
-			for(String tmp:keyWords) 
+			for(String tmp:keyWords) {
 				if(ss.contains(tmp)) 
-					contain=true;
-			if(!contain)status.remove(s);
+					statusRet.add(s);
+			}
+			//if(!contain)status.remove(s);
 		}
 		//@TEST
 		//for(Status s:status)
 		//	System.out.println(s.getUser().getName()+"    "+s.getText());
 		//@ENDTEST
-		return status;
+		return statusRet;
 	}//getKeyStatus
 
 	@Override
