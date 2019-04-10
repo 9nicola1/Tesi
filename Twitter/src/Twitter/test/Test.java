@@ -3,10 +3,13 @@ package Twitter.test;
 import java.util.LinkedList;
 import java.util.List;
 
+import twitter4j.GeoLocation;
 import twitter4j.HashtagEntity;
 import twitter4j.Location;
+import twitter4j.Place;
 import twitter4j.Status;
 import twitter4j.TwitterException;
+import twitter4j.URLEntity;
 
 /**
  * 
@@ -27,22 +30,40 @@ public class Test {
 		ContainerAbstract container=new Container(APIKey, APISecret, AccessToken, AccessTokenSecret);
 		List<String>keyWords=new LinkedList<String>();
 		keyWords.add("Conversation");
-		//keyWords.add("Help");
-		//keyWords.add("Allert");
-		List<Status>listStatus=null, listKeyStatus=null;
-		List<HashtagEntity>listHashtag=null;
+		keyWords.add("Help");
+		keyWords.add("Allert");
+		AccessDB accessDB=new AccessDB();
+		LinkedList<String>hashtag=new LinkedList<String>();
+		hashtag.add("#10aprile");
+		//hashtag.add("Help");
+		//hashtag.add("Allert");
+		List<Status>listStatus=null, listKeyStatus=null,listHashtag=null, listOneHashtag=null;
 		List<Location>listLocation=null;
 		try {
-			listStatus=container.getStatus();
-			listKeyStatus=container.getKeyStatus(keyWords);
-		//	listHashtag=container.getHashtag();
+		//	listStatus=container.getStatus();
+			listOneHashtag=container.getTweetFromOneHashtag("#calabria", 100, 39.3099931, 16.2501929, 20, "2019-04-10");
+		//	listKeyStatus=container.getKeyStatus(keyWords);
+		//	listHashtag=container.getTweetFromHashtag(hashtag, 10, 0, 10);
 		//	listLocation=container.getLocation(keyWords);
 		}catch(TwitterException tE) {
 			System.out.println("TwitterException!, please check methods");
 			tE.printStackTrace();
 		}
+		for(Status s:listOneHashtag) {
+			Place x=s.getPlace();	//Prende la posizione del tweet, se non c'è return null
+			if(x!=null)
+				System.out.println("Città: "+x.getName()+ "\tPaese: "+x.getCountry());
+			System.out.println("User: "+s.getUser().getName()+'\n'+s.getText());
+			System.out.println();
+		}
+		/*for(Status s:listStatus)
+			System.out.println(s.getText());
+		accessDB.insertListStatus(listStatus);
 		for(Status s:listKeyStatus)
 			System.out.println(s.getText());
+		accessDB.insertListKeyStatus(listKeyStatus);*/
+		//for(Status s:listHashtag)
+			//System.out.println(s.getText());
 	}//main
 	
 }//Test

@@ -1,5 +1,6 @@
 package Twitter.test;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import twitter4j.HashtagEntity;
@@ -44,7 +45,20 @@ public abstract class ContainerAbstract {
 	 * @return Ritorna una lista contenente gli stati sulla HomePage di Twitter
 	 * @throws TwitterException
 	 */
-	protected abstract List<HashtagEntity> getHashtag()throws TwitterException;
+	protected abstract List<Status> getTweetFromHashtag(LinkedList<String>hashtag, int count, long sinceId, int limit)throws TwitterException;
+	
+	/**
+	 * 
+	 * @param hashtag
+	 * @param count
+	 * @param latitude
+	 * @param longitude
+	 * @param km
+	 * @param date -->Fornire una data del tipo yyyy-mm-dd
+	 * @return Ritorna una lista contenente tutti gli stati ricercati alla localizzazione fornita con un area di km forniti
+	 * @throws TwitterException
+	 */
+	protected abstract List<Status> getTweetFromOneHashtag(String hashtag, int count, double latitude, double longitude, int km, String date)throws TwitterException;
 	
 	/**
 	 * 

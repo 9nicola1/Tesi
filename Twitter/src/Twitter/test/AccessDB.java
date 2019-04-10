@@ -74,7 +74,7 @@ public class AccessDB implements AccessDBInterface {
 			throw new IllegalArgumentException("Lista Status vuota!");
 		}
 		for(Status s:listKeyStatus) {
-			String queryCheck="SELECT * FROM listakeystatus WHERE Status='"+s.getText()+"'";
+			String queryCheck="SELECT * FROM listakeystatus WHERE keystatus='"+s.getText()+"'";
 			try{
 				PreparedStatement pst=((java.sql.Connection) connection).prepareStatement(urlDB);
 				ResultSet rs=pst.executeQuery(queryCheck);
