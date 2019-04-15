@@ -1,5 +1,6 @@
 package Twitter.saving;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -24,6 +25,6 @@ public abstract class SavingAbstract {
 	  * @param nameFile -->Fornire il path completo del file (Es. "C:\Users\Nicola\Desktop\nameFile.csv")
 	  * @return Restituisce la lista letta dal file
 	  */
-	 public abstract List<String>readFile(String nameFile)throws IOException;
+	 public abstract List<String>readFile(File file)throws IOException;
 
 }//SavingAbstract
