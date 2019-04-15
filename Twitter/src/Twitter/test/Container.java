@@ -6,6 +6,7 @@ import java.util.List;
 
 import twitter4j.GeoLocation;
 import twitter4j.Location;
+import twitter4j.Place;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -26,82 +27,11 @@ public class Container extends ContainerAbstract{
 
 	@Override
 	protected List<Status> getTweetFromHashtag(LinkedList<String>hashtag, int count, long sinceId, int limit) throws TwitterException {
-		List<Status>list=new LinkedList<Status>();
-		for(String tag:hashtag) {
-			Query query=new Query(tag);
-			query.setCount(count);
-			getTweets(query);
-			query=null;
-			int rate=limit;
-			do {
-				rate--;
-				Query querySince=new Query(tag);
-				querySince.setCount(count);
-				querySince.setSinceId(sinceId);
-				LinkedList<Status>listTmp=getTweets(querySince);
-				for(Status s:listTmp)
-					list.add(s);
-				querySince=null;
-			}while(checkIfSinceTweetsAreAvaiable(tag, count, sinceId)|| rate>0);
-		}
+		//TODO
 		return null;
 	}//getHashtag
 	
-	/**
-	 * 
-	 * @param twitter
-	 * @return
-	 */
-	private boolean checkIfSinceTweetsAreAvaiable(String hashtag, int count, long sinceId) {
-		Query query = new Query(hashtag);
-        query.setCount(count);
-        query.setSinceId(sinceId);
-        try {
-            QueryResult result = twitter.search(query);
-            if(result.getTweets()==null || result.getTweets().isEmpty()){
-                query = null;
-                return false;
-            }
-        } catch (TwitterException te) {
-            System.out.println("Couldn't connect: " + te);
-            System.exit(-1);
-        }catch (Exception e) {
-            System.out.println("Something went wrong: " + e);
-            System.exit(-1);
-        }
-        return true;
-	}//checkIfSinceTweetsAreAvaiable
-
-	/**
-	 * 
-	 * @param query
-	 * @param twitter
-	 * @param string
-	 */
-	private LinkedList<Status> getTweets(Query query) {
-		boolean getTweets=true;
-        LinkedList<Status>listTweet=new LinkedList<Status>();
-        while (getTweets){
-            try {
-                QueryResult result = twitter.search(query);
-                if(result.getTweets()==null || result.getTweets().isEmpty()){
-                    getTweets=false;
-                }else{
-                    for (Status status: result.getTweets()) {
-                        listTweet.add(status); 
-                        System.out.println(status.getText());
-                    }
-                }
-            }catch (TwitterException te) {
-                System.out.println("Couldn't connect: " + te);
-                System.exit(-1);
-            }catch (Exception e) {
-                System.out.println("Something went wrong: " + e);
-                System.exit(-1);
-            }
-        }		
-        return listTweet;
-    }//getTweets
+	
 
 	@Override
 	protected List<Status> getKeyStatus(List<String> keyWords) throws TwitterException {
@@ -121,9 +51,30 @@ public class Container extends ContainerAbstract{
 	}//getKeyStatus
 
 	@Override
-	protected List<Location> getLocation(List<String> keyWords) throws TwitterException {
-		// TODO Auto-generated method stub
-		return null;
+	protected List<Status> getTweetsFromLocation(List<String> city,  int count, String date) throws TwitterException {
+		LinkedList<Status>list=new LinkedList<Status>();
+		for(String s:city) {
+			Query query=new Query(s);
+			query.count(count);
+			query.setSince(date);
+			try {
+				QueryResult result=twitter.search(query);
+				for(Status status:result.getTweets()) {
+					System.out.println(status);
+					Place place=status.getPlace();
+					System.out.println("############");
+					if(place!=null)System.out.println(place.getName());
+					if((place!=null && !place.getName().equals(' ')) && place.getName().equals(s)) {
+						System.out.println("Luogo cercato: "+place.getName()+"\t Citta': "+s);
+						list.add(status);
+					}
+				}
+			}catch(TwitterException tE) {
+				System.out.println("Errore  in getLocation: "+s);
+				tE.printStackTrace();
+			}
+		}
+		return list;
 	}//getLocation
 
 	@Override

@@ -35,26 +35,33 @@ public class Test {
 		AccessDB accessDB=new AccessDB();
 		LinkedList<String>hashtag=new LinkedList<String>();
 		hashtag.add("#10aprile");
+		LinkedList<String>location=new LinkedList<String>();
+		location.add("NewYork");
+		location.add("Roma");
 		//hashtag.add("Help");
 		//hashtag.add("Allert");
-		List<Status>listStatus=null, listKeyStatus=null,listHashtag=null, listOneHashtag=null;
+		List<Status>listStatus=null, listKeyStatus=null,listHashtag=null, listOneHashtag=null, listFromLocation=null;
 		List<Location>listLocation=null;
 		try {
 		//	listStatus=container.getStatus();
-			listOneHashtag=container.getTweetFromOneHashtag("#calabria", 100, 39.3099931, 16.2501929, 20, "2019-04-10");
+			listOneHashtag=container.getTweetFromOneHashtag("#calabria", 100, 39.3099931, 16.2501929, 20, "2019-04-11");
 		//	listKeyStatus=container.getKeyStatus(keyWords);
 		//	listHashtag=container.getTweetFromHashtag(hashtag, 10, 0, 10);
-		//	listLocation=container.getLocation(keyWords);
+		//	listFromLocation=container.getTweetsFromLocation(location, 100, "2019-04-10");
 		}catch(TwitterException tE) {
 			System.out.println("TwitterException!, please check methods");
 			tE.printStackTrace();
 		}
+	//	for(Status s:listFromLocation) {
+	//		System.out.println(s.getText());
+	//	}
 		for(Status s:listOneHashtag) {
 			Place x=s.getPlace();	//Prende la posizione del tweet, se non c'è return null
 			if(x!=null)
-				System.out.println("Città: "+x.getName()+ "\tPaese: "+x.getCountry());
-			System.out.println("User: "+s.getUser().getName()+'\n'+s.getText());
-			System.out.println();
+				System.out.println(s);
+	//		System.out.println("Città: "+x.getName()+ "\tPaese: "+x.getCountry());
+	//		System.out.println("User: "+s.getUser().getName()+'\n'+s.getText());
+	//		System.out.println();
 		}
 		/*for(Status s:listStatus)
 			System.out.println(s.getText());
