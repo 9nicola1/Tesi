@@ -20,8 +20,8 @@ public class Saving extends SavingAbstract{
 		Date currentDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String currentTime=sdf.format(currentDate);
-		FileWriter writer=new FileWriter(nameFile);
 		List<String>oldList=readFile(new File(nameFile));
+		FileWriter writer=new FileWriter(nameFile);
 		if(oldList.size()!=0) {
 			for(String s:oldList) 
 				writer.append(s);

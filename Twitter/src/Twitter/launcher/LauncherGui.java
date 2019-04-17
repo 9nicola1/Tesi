@@ -1,11 +1,13 @@
 package Twitter.launcher;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,8 +16,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.DefaultTableModel;
 
 import Twitter.saving.Saving;
 import Twitter.saving.SavingAbstract;
@@ -42,10 +47,12 @@ public class LauncherGui extends JFrame{
 	private JLabel areaLabel=new JLabel("Area");
 	private JLabel pathFileLabel=new JLabel("Nessun file scelto");
 	private String pathFile="";
-	private JButton search=new JButton("SEARCH");
+	private JButton search=new JButton("AVVIA");
+	private JPanel container=new JPanel();
+	private PanelTable panelTable=new PanelTable();
 	public LauncherGui() {
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
-		setSize(350,400);
+		setSize(900,700);
 		setTitle("TWITTER");
 		setLocation(800, 300);
 		setVisible(true);
@@ -67,6 +74,8 @@ public class LauncherGui extends JFrame{
 			add(buttonFile, BorderLayout.CENTER);
 			add(pathFileLabel, BorderLayout.CENTER);
 			add(search, BorderLayout.CENTER);
+			container.add(panelTable, BorderLayout.NORTH);
+			add(container, BorderLayout.SOUTH);
 			hashtag.addMouseListener(new MouseAdapter(){
 				@Override
 				public void mouseClicked(MouseEvent e){
@@ -106,14 +115,41 @@ public class LauncherGui extends JFrame{
 						JOptionPane.showMessageDialog(null, this, "ERRORE!", JOptionPane.ERROR_MESSAGE);
 						hashtag.setText("");
 					}
-					if(!hashtag.getText().equals("")&& !hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")) {
+					else if(!hashtag.getText().equals("")&& !hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")
+							&& !latitudine.getText().equals("") && !latitudine.getText().equals("Es. 39.3099931")
+							&& !longitudine.getText().equals("") && !longitudine.getText().equals("Es. 16.2501929")
+							&& !area.getText().equals("") && !area.getText().equals("Specificare l'area di circonferenza, in miglia")) {
+						try {
+							long lat=(Long)Long.parseLong(latitudine.getText());
+							long lon=Long.parseLong(longitudine.getText());
+							int km=Integer.parseInt(area.getText());
+							Date currentDate = new Date();
+					        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+					        String currentTime=sdf.format(currentDate);
+							System.out.println("latitudine "+lat);
+							System.out.println("longitudine "+lon);
+							System.out.println("data "+currentTime);
+					        List<Status>status=searching.getTweetFromHashtagAndLocation(hashtag.getText(), 100, lat, lon, km, currentTime);
+						}catch(Exception e1) {
+							JOptionPane.showMessageDialog(null, this, "DATI ERRATI!", JOptionPane.ERROR_MESSAGE);
+							e1.printStackTrace();
+
+						}						
+					}
+					else if(!hashtag.getText().equals("") && !hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")){
 						if(!pathFile.equals("")) {
 							String keyWord=hashtag.getText();
 							List<Status>status=null;
 							try {
 								status=searching.getTweetFromHashtag(keyWord, 100);
-								for(Status s:status)
+								Date currentDate = new Date();
+						        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						        String currentTime=sdf.format(currentDate);
+								for(Status s:status) {
 									System.out.println(s);
+									Object[]obj= {currentTime, s.getText().toString()};
+									panelTable.dtm.addRow(obj);
+								}
 								saving.saveList(status, pathFile);		
 							}catch(TwitterException | IOException e1) {
 								e1.printStackTrace();
@@ -124,6 +160,25 @@ public class LauncherGui extends JFrame{
 			});
 		}//Constructor
 	}//InitialPanel
+	
+	class PanelTable extends JPanel{
+		public String[]columnNames={"Orario prelievo", "Stato"};
+		public Object[][]data={};
+		public DefaultTableModel dtm=new DefaultTableModel(data, columnNames){
+			@Override
+			public boolean isCellEditable(int row, int column){
+				//all cells false
+				return false;
+			}
+		};;
+		public JTable table=new JTable(dtm);
+		public PanelTable(){
+			JScrollPane scrollPane=new JScrollPane(table);
+			scrollPane.setPreferredSize(new Dimension(700,780));
+			table.setFillsViewportHeight(true);
+			add(scrollPane);
+		}
+	}//PanelTable
 	
 	public static void main(String[]args) {
 		LauncherGui lG=new LauncherGui();
