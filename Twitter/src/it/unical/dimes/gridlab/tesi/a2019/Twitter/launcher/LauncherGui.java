@@ -36,8 +36,8 @@ public class LauncherGui extends JFrame{
 	private String APISecret="ovCke2aWfdW6TvhZ0dggL5mO320mzMlLZwDgcvNVUqlUsZbp9J";	  //Application Settings/Consumer Secret (API Secret)
 	private String AccessToken="1113747010694340608-csRTyytaX9TqM6zJLN3yPl5O0V2Yos";					 //Your Access Token/Access Token
 	private String AccessTokenSecret="QB57vcKjJLXQbqQXKQ4I5n6wfvVFuUBkS3MfhOC81sjzA";			  //Your Access Token/Access Token Secret
-	private static SearchingAbstract searching=null;
-	private static SavingAbstract saving=new Saving();
+	private static Searching searching=null;
+	private static Saving saving=new Saving();
 	private JTextField hashtag=new JTextField("Scrivi qui uno o piu' hashtag separati da virgole");
 	private JLabel hashtagLabel=new JLabel("HashTag");
 	private JButton buttonFile=new JButton("SCEGLI DOVE SALVARE");
@@ -45,14 +45,17 @@ public class LauncherGui extends JFrame{
 	private JLabel latitudineLabel=new JLabel("Latitudine");
 	private JTextField longitudine=new JTextField("Es. 16.2501929");
 	private JLabel longitudineLabel=new JLabel("Longitudine");
-	private JTextField area=new JTextField("Specificare l'area di circonferenza, in miglia");
+	private JTextField area=new JTextField("Area in miglia");
 	private JLabel areaLabel=new JLabel("Area");
 	private JLabel pathFileLabel=new JLabel("Nessun file scelto");
+	private JLabel giornoLabel=new JLabel("Giorno");
+	private JTextField giorno=new JTextField("dddd_mm_yy");
 	private String pathFile="";
 	private JButton search=new JButton("AVVIA");
 	private JPanel containerTable=new JPanel();
 	private JPanel containerText=new JPanel();
 	private PanelTable panelTable=new PanelTable();
+	private Controller controller=new Controller();
 	public LauncherGui() {
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
 		Dimension d=getMaximumSize(); 
@@ -75,6 +78,8 @@ public class LauncherGui extends JFrame{
 			containerText.add(longitudine,BorderLayout.NORTH);
 			containerText.add(areaLabel,BorderLayout.NORTH);
 			containerText.add(area,BorderLayout.NORTH);
+			containerText.add(giornoLabel, BorderLayout.CENTER);
+			containerText.add(giorno, BorderLayout.CENTER);
 			containerText.add(buttonFile, BorderLayout.CENTER);
 			containerText.add(pathFileLabel, BorderLayout.CENTER);
 			containerText.add(search, BorderLayout.CENTER);
@@ -101,6 +106,11 @@ public class LauncherGui extends JFrame{
 				public void mouseClicked(MouseEvent e){
 					area.setText("");						
 				}});
+			giorno.addMouseListener(new MouseAdapter(){
+				@Override
+				public void mouseClicked(MouseEvent e){
+					giorno.setText("");						
+				}});
 			buttonFile.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -116,87 +126,12 @@ public class LauncherGui extends JFrame{
 			search.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(hashtag.getText().equals("")|| hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")) {
-						JOptionPane.showMessageDialog(null, this, "ERRORE!", JOptionPane.ERROR_MESSAGE);
-						hashtag.setText("");
-					}
-					else if(!hashtag.getText().equals("")&& !hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")
-							&& !latitudine.getText().equals("") && !latitudine.getText().equals("Es. 39.3099931")
-							&& !longitudine.getText().equals("") && !longitudine.getText().equals("Es. 16.2501929")
-							&& !area.getText().equals("") && !area.getText().equals("Specificare l'area di circonferenza, in miglia")) {
-						try {
-							double lat=Double.parseDouble(latitudine.getText());
-							double lon=Double.parseDouble(longitudine.getText());
-							long x=(long) lat;
-							long y=(long)lon;
-							int km=Integer.parseInt(area.getText());
-							while(true) {
-								Date currentDate = new Date();
-						        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-						        String currentTime=sdf.format(currentDate);
-						        List<Status>status=searching.getTweetFromHashtagAndLocation(hashtag.getText(), 100, x, y, km, currentTime);
-						        for(Status s:status) {
-									System.out.println(s);
-									Object[]obj= {currentTime, s.getText().toString()};
-									panelTable.dtm.addRow(obj);
-								}
-								saving.saveList(status, pathFile);
-								Thread.sleep(10000);
-							}
-						}catch(Exception e1) {
-							JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
-							e1.printStackTrace();
-
-						}						
-					}
-					else if(!hashtag.getText().equals("") && !hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")){
-						if(!pathFile.equals("")) {
-							String keyWord=hashtag.getText();
-							List<Status>status=null;
-							try {
-								while(true) {
-									status=searching.getTweetFromHashtag(keyWord, 100);
-									Date currentDate = new Date();
-							        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-							        String currentTime=sdf.format(currentDate);
-									for(Status s:status) {
-										System.out.println(s);
-										Object[]obj= {currentTime, s.getText().toString()};
-										panelTable.dtm.addRow(obj);
-									}
-									saving.saveList(status, pathFile);	
-									Thread.sleep(900000);	//15 minuti
-								}
-							}catch(TwitterException |InterruptedException | IOException e1) {
-								JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
-
-								e1.printStackTrace();
-							}
-						}
-					}
-				}
-			});
+					controller.search(searching, hashtag, latitudine, longitudine, area, giorno, pathFile, panelTable, saving);
+				}});
 		}//Constructor
 	}//InitialPanel
 	
-	class PanelTable extends JPanel{
-		public String[]columnNames={"Orario prelievo", "Stato"};
-		public Object[][]data={};
-		public DefaultTableModel dtm=new DefaultTableModel(data, columnNames){
-			@Override
-			public boolean isCellEditable(int row, int column){
-				//all cells false
-				return false;
-			}
-		};;
-		public JTable table=new JTable(dtm);
-		public PanelTable(){
-			JScrollPane scrollPane=new JScrollPane(table);
-			scrollPane.setPreferredSize(new Dimension(700,780));
-			table.setFillsViewportHeight(true);
-			add(scrollPane);
-		}
-	}//PanelTable
+
 	
 	public static void main(String[]args) {
 		LauncherGui lG=new LauncherGui();
