@@ -1,7 +1,9 @@
-package Twitter.launcher;
+package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -22,10 +24,10 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 
-import Twitter.saving.Saving;
-import Twitter.saving.SavingAbstract;
-import Twitter.taking.Searching;
-import Twitter.taking.SearchingAbstract;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.SavingAbstract;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.SearchingAbstract;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -48,13 +50,14 @@ public class LauncherGui extends JFrame{
 	private JLabel pathFileLabel=new JLabel("Nessun file scelto");
 	private String pathFile="";
 	private JButton search=new JButton("AVVIA");
-	private JPanel container=new JPanel();
+	private JPanel containerTable=new JPanel();
+	private JPanel containerText=new JPanel();
 	private PanelTable panelTable=new PanelTable();
 	public LauncherGui() {
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
-		setSize(900,700);
-		setTitle("TWITTER");
-		setLocation(800, 300);
+		Dimension d=getMaximumSize(); 
+		setSize(d.width, d.height);
+		setTitle("Twitter Analysis");
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -63,19 +66,21 @@ public class LauncherGui extends JFrame{
 	
 	class InitialPanel extends JPanel{
 		public InitialPanel() {
-			add(hashtagLabel, BorderLayout.NORTH);
-			add(hashtag, BorderLayout.NORTH);
-			add(latitudineLabel,BorderLayout.NORTH);
-			add(latitudine,BorderLayout.NORTH);
-			add(longitudineLabel, BorderLayout.NORTH);
-			add(longitudine,BorderLayout.NORTH);
-			add(areaLabel,BorderLayout.NORTH);
-			add(area,BorderLayout.NORTH);
-			add(buttonFile, BorderLayout.CENTER);
-			add(pathFileLabel, BorderLayout.CENTER);
-			add(search, BorderLayout.CENTER);
-			container.add(panelTable, BorderLayout.NORTH);
-			add(container, BorderLayout.SOUTH);
+			setLayout(new GridLayout(1,2));
+			containerText.add(hashtagLabel, BorderLayout.NORTH);
+			containerText.add(hashtag, BorderLayout.NORTH);
+			containerText.add(latitudineLabel,BorderLayout.NORTH);
+			containerText.add(latitudine,BorderLayout.NORTH);
+			containerText.add(longitudineLabel, BorderLayout.NORTH);
+			containerText.add(longitudine,BorderLayout.NORTH);
+			containerText.add(areaLabel,BorderLayout.NORTH);
+			containerText.add(area,BorderLayout.NORTH);
+			containerText.add(buttonFile, BorderLayout.CENTER);
+			containerText.add(pathFileLabel, BorderLayout.CENTER);
+			containerText.add(search, BorderLayout.CENTER);
+			containerTable.add(panelTable, BorderLayout.NORTH);
+			add(containerText);
+			add(containerTable);
 			hashtag.addMouseListener(new MouseAdapter(){
 				@Override
 				public void mouseClicked(MouseEvent e){
@@ -120,18 +125,26 @@ public class LauncherGui extends JFrame{
 							&& !longitudine.getText().equals("") && !longitudine.getText().equals("Es. 16.2501929")
 							&& !area.getText().equals("") && !area.getText().equals("Specificare l'area di circonferenza, in miglia")) {
 						try {
-							long lat=(Long)Long.parseLong(latitudine.getText());
-							long lon=Long.parseLong(longitudine.getText());
+							double lat=Double.parseDouble(latitudine.getText());
+							double lon=Double.parseDouble(longitudine.getText());
+							long x=(long) lat;
+							long y=(long)lon;
 							int km=Integer.parseInt(area.getText());
-							Date currentDate = new Date();
-					        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-					        String currentTime=sdf.format(currentDate);
-							System.out.println("latitudine "+lat);
-							System.out.println("longitudine "+lon);
-							System.out.println("data "+currentTime);
-					        List<Status>status=searching.getTweetFromHashtagAndLocation(hashtag.getText(), 100, lat, lon, km, currentTime);
+							while(true) {
+								Date currentDate = new Date();
+						        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+						        String currentTime=sdf.format(currentDate);
+						        List<Status>status=searching.getTweetFromHashtagAndLocation(hashtag.getText(), 100, x, y, km, currentTime);
+						        for(Status s:status) {
+									System.out.println(s);
+									Object[]obj= {currentTime, s.getText().toString()};
+									panelTable.dtm.addRow(obj);
+								}
+								saving.saveList(status, pathFile);
+								Thread.sleep(10000);
+							}
 						}catch(Exception e1) {
-							JOptionPane.showMessageDialog(null, this, "DATI ERRATI!", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
 							e1.printStackTrace();
 
 						}						
@@ -141,17 +154,22 @@ public class LauncherGui extends JFrame{
 							String keyWord=hashtag.getText();
 							List<Status>status=null;
 							try {
-								status=searching.getTweetFromHashtag(keyWord, 100);
-								Date currentDate = new Date();
-						        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-						        String currentTime=sdf.format(currentDate);
-								for(Status s:status) {
-									System.out.println(s);
-									Object[]obj= {currentTime, s.getText().toString()};
-									panelTable.dtm.addRow(obj);
+								while(true) {
+									status=searching.getTweetFromHashtag(keyWord, 100);
+									Date currentDate = new Date();
+							        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+							        String currentTime=sdf.format(currentDate);
+									for(Status s:status) {
+										System.out.println(s);
+										Object[]obj= {currentTime, s.getText().toString()};
+										panelTable.dtm.addRow(obj);
+									}
+									saving.saveList(status, pathFile);	
+									Thread.sleep(900000);	//15 minuti
 								}
-								saving.saveList(status, pathFile);		
-							}catch(TwitterException | IOException e1) {
+							}catch(TwitterException |InterruptedException | IOException e1) {
+								JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
+
 								e1.printStackTrace();
 							}
 						}

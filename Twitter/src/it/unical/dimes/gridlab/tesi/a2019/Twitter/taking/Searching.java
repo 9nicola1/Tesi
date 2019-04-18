@@ -1,4 +1,4 @@
-package Twitter.taking;
+package it.unical.dimes.gridlab.tesi.a2019.Twitter.taking;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

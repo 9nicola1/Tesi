@@ -1,9 +1,7 @@
-package Twitter.launcher;
+package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
-import Twitter.taking.*;
-import Twitter.saving.*;
-import Twitter.test.Container;
-import Twitter.test.ContainerAbstract;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.*;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -25,7 +23,7 @@ public class Launcher {
 		saving=new Saving();
 		List<Status>status=null;
 		try {
-			status=searching.getTweetFromHashtag(keyWord, 10);
+			status=searching.getTweetFromHashtagAndLocation("#Cosenza", 100, 39.3099931, 16.2501929, 20, "2019_04_09");
 			for(Status s:status)
 				System.out.println(s);
 			saving.saveList(status, nameFile);		

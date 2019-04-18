@@ -1,27 +1,20 @@
-package Twitter.test;
+package it.unical.dimes.gridlab.tesi.a2019.Twitter.taking;
 
-import java.util.LinkedList;
+
 import java.util.List;
 
-import twitter4j.HashtagEntity;
-import twitter4j.Location;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-/**
- * 
- * @author Nicola
- *
- */
-public abstract class ContainerAbstract {
+public abstract class SearchingAbstract {
 	protected ConfigurationBuilder cB; 
 	protected TwitterFactory tF;
 	protected Twitter twitter;
 	
-	public ContainerAbstract(String APIKey, String APISecret, String AccessToken, String AccessTokenSecret) {
+	public SearchingAbstract(String APIKey, String APISecret, String AccessToken, String AccessTokenSecret) {
 		cB=new ConfigurationBuilder();
 		cB.setDebugEnabled(true)
 			.setOAuthConsumerKey(APIKey) 			//Application Settings/Consumer Key (API key)
@@ -35,20 +28,6 @@ public abstract class ContainerAbstract {
 	
 	/**
 	 * 
-	 * @return Ritorna una lista contenente gli stati sulla HomePage di Twitter
-	 * @throws TwitterException
-	 */
-	protected abstract List<Status> getStatus()throws TwitterException;
-	
-	/**
-	 * 
-	 * @return Ritorna una lista contenente gli stati sulla HomePage di Twitter
-	 * @throws TwitterException
-	 */
-	protected abstract List<Status> getTweetFromHashtag(LinkedList<String>hashtag, int count, long sinceId, int limit)throws TwitterException;
-	
-	/**
-	 * 
 	 * @param hashtag -->Fornire una Stringa con la parola preceduta dal carattere '#' 
 	 * @param count -->Numero di tweet massimo da ricercare
 	 * @param latitude -->Tipo "long" positivo se NORD dall'equatore, negativo se SUD dell'equatore
@@ -58,24 +37,23 @@ public abstract class ContainerAbstract {
 	 * @return Ritorna una lista contenente tutti gli stati ricercati alla localizzazione fornita con un area di km forniti
 	 * @throws TwitterException
 	 */
-	protected abstract List<Status> getTweetFromOneHashtag(String hashtag, int count, double latitude, double longitude, int km, String date)throws TwitterException;
+	public abstract List<Status> getTweetFromHashtagAndLocation(String hashtag, int count, double latitude, double longitude, int km, String date)throws TwitterException;
 	
 	/**
 	 * 
-	 * @param keyWords -->Lista di Stringhe (con la parola preceduta dal carattere '#')
+	 * @param keyWord -->Stringa contenente una qualsiasi parola chiave ("terremoto", "earthquake", ...)
 	 * @return Ritorna una lista con tutti gli stati che contengono le parole chiavi
 	 * @throws TwitterException
 	 */
-	protected abstract List<Status> getKeyStatus(List<String>keyWords)throws TwitterException;
+	public abstract List<Status> getKeyStatus(String keyWord)throws TwitterException;
 	
 	/**
 	 * 
-	 * @param keyWords -->Lista di Stringhe contenente il nome della città
-	 * @param count -->Numero di tweet massimo da ricercare
-	 * @param date -->Fornire una data del tipo yyyy-mm-dd
-	 * @return Ritorna una lista con tutti i tweet provenienti da "city" (può ritornare una lista vuota)
+	 * @return Ritorna una lista contenente gli stati sulla HomePage di Twitter
 	 * @throws TwitterException
 	 */
-	protected abstract List<Status> getTweetsFromLocation(List<String>city, int count, String date)throws TwitterException;
+	public abstract List<Status> getTweetFromHashtag(String hashtag, int count)throws TwitterException;
 
-}//AbstractContainer
+	
+
+}//SearchingAbstract
