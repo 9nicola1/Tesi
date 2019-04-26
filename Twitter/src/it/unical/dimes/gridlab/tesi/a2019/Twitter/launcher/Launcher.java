@@ -26,7 +26,7 @@ public class Launcher {
 			status=searching.getTweetFromHashtagAndLocation("#Cosenza", 100, 39.3099931, 16.2501929, 20, "2019_04_09");
 			for(Status s:status)
 				System.out.println(s);
-			saving.saveList(status, nameFile);		
+			saving.saveListOnCSV(status, nameFile);		
 		}catch(TwitterException | IOException e) {
 			e.printStackTrace();
 		}

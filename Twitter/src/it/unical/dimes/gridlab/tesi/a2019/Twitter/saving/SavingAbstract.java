@@ -18,8 +18,25 @@ public abstract class SavingAbstract {
 	  * @param list -->Lista contenente gli stati 
 	  * @param nameFile -->Fornire il path completo del file (Es. "C:\Users\Nicola\Desktop\nameFile.csv")
 	  */
-	 public abstract void saveList(List<Status>list, String nameFile)throws IOException;
+	 public abstract void saveListOnCSV(List<Status>list, String nameFile)throws IOException;
 	 
+	 /**
+	  * Questo metodo memorizza la lista degli stati (JSon) su un file di testo
+	  * @param list -->Lista contenente gli stati 
+	  * @param nameFile-->Fornire il path completo del file (Es. "C:\Users\Nicola\Desktop\nameFile.txt")
+	  * @throws IOException
+	  */
+	 public abstract void saveListOnTXT(List<Status>list, String nameFile)throws IOException;
+	 
+	 /**
+	  * Questo metodo a differenza degli altri, salva su un file di testo solo gli stati senza tutti i RT, e se non sono 
+	  * null salva anche immagini e localizzazione.
+	  * Le immagini vengono salvate con il nome "autore+(yyyy_mm_dd HH:mm:ss)"
+	  * @param list-->Lista contenente gli stati 
+	  * @param nameFile-->Fornire il path completo del file (Es. "C:\Users\Nicola\Desktop\nameFile.txt")
+	  * @throws IOException
+	  */
+	 public abstract void saveStatusAndImageAndOthers(List<Status>list, String nameFile)throws IOException;
 	 /**
 	  * 
 	  * @param nameFile -->Fornire il path completo del file (Es. "C:\Users\Nicola\Desktop\nameFile.csv")

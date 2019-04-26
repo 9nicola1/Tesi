@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,6 +42,8 @@ public class LauncherGui extends JFrame{
 	private JTextField hashtag=new JTextField("Scrivi qui uno o piu' hashtag separati da virgole");
 	private JLabel hashtagLabel=new JLabel("HashTag");
 	private JButton buttonFile=new JButton("SCEGLI DOVE SALVARE");
+	private JLabel checkLabel=new JLabel("Ricerca completa");
+	private JCheckBox check=new JCheckBox();
 	private JTextField latitudine=new JTextField("Es. 39.3099931");
 	private JLabel latitudineLabel=new JLabel("Latitudine");
 	private JTextField longitudine=new JTextField("Es. 16.2501929");
@@ -49,22 +52,26 @@ public class LauncherGui extends JFrame{
 	private JLabel areaLabel=new JLabel("Area");
 	private JLabel pathFileLabel=new JLabel("Nessun file scelto");
 	private JLabel giornoLabel=new JLabel("Giorno");
-	private JTextField giorno=new JTextField("dddd_mm_yy");
+	private JTextField giorno=new JTextField("yyyy_mm_dd");
 	private String pathFile="";
 	private JButton search=new JButton("AVVIA");
 	private JPanel containerTable=new JPanel();
 	private JPanel containerText=new JPanel();
 	private PanelTable panelTable=new PanelTable();
-	private Controller controller=new Controller();
+	private ViewController controller=new ViewController();
 	public LauncherGui() {
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
-		Dimension d=getMaximumSize(); 
-		setSize(d.width, d.height);
+		//Dimension d=getMaximumSize(); 
+		//setSize(d.width, d.height);
+		setSize(1920,1080);
 		setTitle("Twitter Analysis");
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		add(new InitialPanel());
+		latitudine.setEditable(false);
+		longitudine.setEditable(false);
+		area.setEditable(false);
 	}//Constructor
 	
 	class InitialPanel extends JPanel{
@@ -72,20 +79,39 @@ public class LauncherGui extends JFrame{
 			setLayout(new GridLayout(1,2));
 			containerText.add(hashtagLabel, BorderLayout.NORTH);
 			containerText.add(hashtag, BorderLayout.NORTH);
+			containerText.add(giornoLabel, BorderLayout.CENTER);
+			containerText.add(giorno, BorderLayout.CENTER);
 			containerText.add(latitudineLabel,BorderLayout.NORTH);
 			containerText.add(latitudine,BorderLayout.NORTH);
 			containerText.add(longitudineLabel, BorderLayout.NORTH);
 			containerText.add(longitudine,BorderLayout.NORTH);
 			containerText.add(areaLabel,BorderLayout.NORTH);
 			containerText.add(area,BorderLayout.NORTH);
-			containerText.add(giornoLabel, BorderLayout.CENTER);
-			containerText.add(giorno, BorderLayout.CENTER);
-			containerText.add(buttonFile, BorderLayout.CENTER);
 			containerText.add(pathFileLabel, BorderLayout.CENTER);
+			containerText.add(buttonFile, BorderLayout.CENTER);
+			containerText.add(checkLabel, BorderLayout.CENTER);
+			containerText.add(check, BorderLayout.CENTER);
 			containerText.add(search, BorderLayout.CENTER);
 			containerTable.add(panelTable, BorderLayout.NORTH);
 			add(containerText);
 			add(containerTable);
+			check.addMouseListener(new MouseAdapter(){
+				@Override
+				public void mouseClicked(MouseEvent e){
+					if(check.isSelected()) {
+						latitudine.setEditable(true);
+						longitudine.setEditable(true);
+						area.setEditable(true);
+					}
+					else if(!check.isSelected()) {
+						latitudine.setText("Es. 39.3099931");
+						longitudine.setText("Es. 16.2501929");
+						area.setText("Area in miglia");
+						latitudine.setEditable(false);
+						longitudine.setEditable(false);
+						area.setEditable(false);
+					}
+				}});
 			hashtag.addMouseListener(new MouseAdapter(){
 				@Override
 				public void mouseClicked(MouseEvent e){
@@ -130,8 +156,6 @@ public class LauncherGui extends JFrame{
 				}});
 		}//Constructor
 	}//InitialPanel
-	
-
 	
 	public static void main(String[]args) {
 		LauncherGui lG=new LauncherGui();
