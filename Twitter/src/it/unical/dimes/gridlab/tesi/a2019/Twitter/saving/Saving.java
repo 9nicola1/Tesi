@@ -84,7 +84,8 @@ public class Saving extends SavingAbstract{
 		for(Status s: list) {
 			String author=s.getUser().getName();
 			String status=s.getText();
-			URLEntity[] url=s.getURLEntities();
+			URLEntity[] urls=s.getURLEntities();
+
 			int RT=s.getRetweetCount();
 			GeoLocation geoLocation=s.getGeoLocation();
 			Place place=s.getPlace();		
@@ -99,19 +100,22 @@ public class Saving extends SavingAbstract{
 				fw.write(status);
 				fw.write("\r\n");
 				fw.write("#RT:\r\t");
-				if(RT==0) {
-					fw.write("0");
-				}
-				else {
-					fw.write(RT);
-				}
+				fw.write(""+RT);
 				fw.write("\r\n");
-				if(url.length!=0) {
+				if(urls.length!=0) {
 					fw.write("URL:\r\t");
-					for(int i=0; i<url.length; i++) {
-						fw.write(url[i].toString());
+					for(int i=0; i<urls.length; i++) {
+						fw.write(urls[i].toString());
 						fw.write("\r\n");
+					//	System.out.println("SIZE: "+urls.length);
 					}
+				/*	String url="";
+		            for(URLEntity urlEntity : urls) {
+		                url = urlEntity.getURL();
+						fw.write(url);
+						fw.write("\r\n");
+		            }
+				*/	
 				}
 				if(place!=null && geoLocation!=null) {
 					fw.write("PLACE:\r\t");

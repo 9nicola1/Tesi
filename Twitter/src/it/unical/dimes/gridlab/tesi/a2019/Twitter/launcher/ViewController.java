@@ -12,6 +12,7 @@ import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
 import twitter4j.Status;
 import twitter4j.TwitterException;
+import twitter4j.URLEntity;
 
 public class ViewController implements ViewControllerInteface {
 	private ThreadSearching threadSearching=new ThreadSearching();
@@ -59,17 +60,24 @@ public class ViewController implements ViewControllerInteface {
 				String keyWord=hashtag.getText();
 				List<Status>status=null;
 				try {
-					while(true) {
+				//	while(true) {
 						status=null;
 						status=searching.getTweetFromHashtag(keyWord, 100);
 						Date currentDate = new Date();
 				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				        String currentTime=sdf.format(currentDate);
-				        threadSearching.sleepAndUpdate(900000, panelTable, currentTime, status);
+				    //    threadSearching.sleepAndUpdate(900000, panelTable, currentTime, status);
 						saving.saveStatusAndImageAndOthers(status, pathFile);	
+						for(Status s:status) {
+							URLEntity[] url=s.getURLEntities();
+							Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+									(s.getPlace()==null)?"null":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"null":s.getGeoLocation().getLatitude(),
+									(s.getGeoLocation()==null)?"null":s.getGeoLocation().getLongitude() };
+							panelTable.dtm.addRow(obj);
+						}
 						panelTable.repaint();
 					//	Thread.sleep(900000);	//15 minuti
-					}
+			//		}
 				}catch(TwitterException | IOException e1) {
 					JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
 

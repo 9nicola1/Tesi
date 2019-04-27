@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class PanelTable extends JPanel{
-	public String[]columnNames={"Orario prelievo", "Stato"};
+	public String[]columnNames={"Orario prelievo","Autore", "Stato", "Place", "Latitudine", "Longitudine" };
 	public Object[][]data={};
 	public DefaultTableModel dtm=new DefaultTableModel(data, columnNames){
 		@Override
