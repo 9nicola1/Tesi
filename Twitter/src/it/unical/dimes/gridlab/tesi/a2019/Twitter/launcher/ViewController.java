@@ -5,8 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
@@ -14,12 +16,12 @@ import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.URLEntity;
 
-public class ViewController implements ViewControllerInteface {
+public class ViewController extends SwingWorker<String, Object> implements ViewControllerInteface {
 	private ThreadSearching threadSearching=new ThreadSearching();
 	
 	@Override
 	public void search(Searching searching, JTextField hashtag, JTextField latitudine, JTextField longitudine,
-			JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving) {
+			JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving, JCheckBox check) {
 		if(pathFile.equals("Nessun file scelto")|| pathFile.equals(""))
 			JOptionPane.showMessageDialog(null, "File non selezionato!","Errore", JOptionPane.ERROR_MESSAGE);
 		if(hashtag.getText().equals("")|| hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")) {
@@ -41,13 +43,18 @@ public class ViewController implements ViewControllerInteface {
 			        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 			        String currentTime=sdf.format(currentDate);
 			        List<Status>status=searching.getTweetFromHashtagAndLocation(hashtag.getText(), 100, x, y, km, currentTime);
-			        for(Status s:status) {
-						System.out.println(s);
-						Object[]obj= {currentTime, s.getText().toString()};
-						panelTable.dtm.addRow(obj);
-					}
-					saving.saveListOnCSV(status, pathFile);
-					Thread.sleep(10000);
+			        if(status.size()!=0) {
+				        for(Status s:status) {
+							System.out.println(s);
+							Object[]obj= {currentTime, s.getText().toString()};
+							panelTable.dtm.addRow(obj);
+						}
+						saving.saveListOnCSV(status, pathFile);
+						Thread.sleep(10000);
+				    }else{
+				    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
+						hashtag.setText("");
+				    }
 				}
 			}catch(Exception e1) {
 				JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
@@ -68,15 +75,20 @@ public class ViewController implements ViewControllerInteface {
 				        String currentTime=sdf.format(currentDate);
 				    //    threadSearching.sleepAndUpdate(900000, panelTable, currentTime, status);
 						saving.saveStatusAndImageAndOthers(status, pathFile);	
-						for(Status s:status) {
-							URLEntity[] url=s.getURLEntities();
-							Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
-									(s.getPlace()==null)?"null":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"null":s.getGeoLocation().getLatitude(),
-									(s.getGeoLocation()==null)?"null":s.getGeoLocation().getLongitude() };
-							panelTable.dtm.addRow(obj);
+						if(status.size()!=0) {
+							for(Status s:status) {
+								Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+										(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
+										(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
+								panelTable.dtm.addRow(obj);
+							}
+							panelTable.repaint();
+
+						//	Thread.sleep(900000);	//15 minuti
+						}else{
+							JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
+							hashtag.setText("");
 						}
-						panelTable.repaint();
-					//	Thread.sleep(900000);	//15 minuti
 			//		}
 				}catch(TwitterException | IOException e1) {
 					JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
@@ -86,4 +98,12 @@ public class ViewController implements ViewControllerInteface {
 			}
 		}
 	}//search
+	
+	
+	@Override
+	protected String doInBackground() throws Exception {
+		while(true) {
+			
+		}
+	}
 }//Controller

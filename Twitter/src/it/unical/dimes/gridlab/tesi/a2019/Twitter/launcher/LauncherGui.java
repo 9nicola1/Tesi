@@ -2,6 +2,7 @@ package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -12,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -20,8 +22,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,6 +33,7 @@ import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.SavingAbstract;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.SearchingAbstract;
+import jdk.nashorn.tools.Shell;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -69,6 +74,7 @@ public class LauncherGui extends JFrame{
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		add(new InitialPanel());
+		giorno.setEditable(false);
 		latitudine.setEditable(false);
 		longitudine.setEditable(false);
 		area.setEditable(false);
@@ -76,6 +82,8 @@ public class LauncherGui extends JFrame{
 	
 	class InitialPanel extends JPanel{
 		public InitialPanel() {
+		//	GridBuilder gb = new GridBuilder(this,    new double[] { 0, 0, 0, 1, 0 },   new double[] { 0, 1}, 3); 
+		//	GridBagConstraints constraints = new GridBagConstraints();
 			setLayout(new GridLayout(1,2));
 			containerText.add(hashtagLabel, BorderLayout.NORTH);
 			containerText.add(hashtag, BorderLayout.NORTH);
@@ -92,6 +100,9 @@ public class LauncherGui extends JFrame{
 			containerText.add(checkLabel, BorderLayout.CENTER);
 			containerText.add(check, BorderLayout.CENTER);
 			containerText.add(search, BorderLayout.CENTER);
+
+
+	//		containerText.add(new JSeparator(JSeparator.VERTICAL),BorderLayout.LINE_START);;
 			containerTable.add(panelTable, BorderLayout.NORTH);
 			add(containerText);
 			add(containerTable);
@@ -99,14 +110,17 @@ public class LauncherGui extends JFrame{
 				@Override
 				public void mouseClicked(MouseEvent e){
 					if(check.isSelected()) {
+						giorno.setEditable(true);
 						latitudine.setEditable(true);
 						longitudine.setEditable(true);
 						area.setEditable(true);
 					}
 					else if(!check.isSelected()) {
+						giorno.setText("yyyy_mm_dd");
 						latitudine.setText("Es. 39.3099931");
 						longitudine.setText("Es. 16.2501929");
 						area.setText("Area in miglia");
+						giorno.setEditable(false);
 						latitudine.setEditable(false);
 						longitudine.setEditable(false);
 						area.setEditable(false);
@@ -152,7 +166,7 @@ public class LauncherGui extends JFrame{
 			search.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					controller.search(searching, hashtag, latitudine, longitudine, area, giorno, pathFile, panelTable, saving);
+					controller.search(searching, hashtag, latitudine, longitudine, area, giorno, pathFile, panelTable, saving, check);
 				}});
 		}//Constructor
 	}//InitialPanel

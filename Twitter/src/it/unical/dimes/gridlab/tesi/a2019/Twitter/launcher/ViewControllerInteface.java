@@ -1,5 +1,6 @@
 package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
+import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
@@ -22,5 +23,5 @@ public interface ViewControllerInteface {
 	 * @param data
 	 * @param pathFile
 	 */
-	public void search(Searching searching, JTextField hashtag, JTextField latitudine, JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving);
+	public void search(Searching searching, JTextField hashtag, JTextField latitudine, JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving, JCheckBox check);
 }//search

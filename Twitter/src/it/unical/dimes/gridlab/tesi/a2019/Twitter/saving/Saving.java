@@ -66,21 +66,39 @@ public class Saving extends SavingAbstract{
 
 	@Override
 	public void saveListOnTXT(List<Status> list, String nameFile) throws IOException {
+		Date currentDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String currentTime=sdf.format(currentDate);
 		File file=new File(nameFile);
-		FileWriter fw=new FileWriter(file);
+		FileWriter fw=new FileWriter(file, true);
+		fw.write(currentTime);
+		fw.write("\r\n");
+		fw.write("\r\n");
+		fw.write("\r\n");
 		for(Status s: list) {
 			fw.write(s.toString());
 			fw.write("\r\n");
 			fw.write("\r\n");
 			fw.flush();
 		}
+		fw.write("\r\n");
+		fw.write("\r\n");
+		fw.write("\r\n");
+		fw.write("\r\n");
 		fw.close();
 	}//saveListOnTXT
 
 	@Override
 	public void saveStatusAndImageAndOthers(List<Status> list, String nameFile) throws IOException {
+		Date currentDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String currentTime=sdf.format(currentDate);
 		File file=new File(nameFile);
-		FileWriter fw=new FileWriter(file);
+		FileWriter fw=new FileWriter(file, true);
+		fw.write(currentTime);
+		fw.write("\r\n");
+		fw.write("\r\n");
+		fw.write("\r\n");
 		for(Status s: list) {
 			String author=s.getUser().getName();
 			String status=s.getText();
@@ -89,9 +107,6 @@ public class Saving extends SavingAbstract{
 			int RT=s.getRetweetCount();
 			GeoLocation geoLocation=s.getGeoLocation();
 			Place place=s.getPlace();		
-			Date currentDate = new Date();
-	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_mm_dd_HH:mm:ss");
-	        String currentTime=sdf.format(currentDate);
 	        try {
 				fw.write("AUTHOR:\r\t");
 				fw.write(author);
@@ -163,6 +178,10 @@ public class Saving extends SavingAbstract{
 	        	e.printStackTrace();
 	        }*/
 		}
+		fw.write("\r\n");
+		fw.write("\r\n");
+		fw.write("\r\n");
+		fw.write("\r\n");
 		fw.close();	
 	}//saveStatusAndImageAndOthers
 
