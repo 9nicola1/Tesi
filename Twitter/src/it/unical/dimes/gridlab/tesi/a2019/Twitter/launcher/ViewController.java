@@ -132,7 +132,7 @@ public class ViewController extends SwingWorker<String, Object> implements ViewC
 				int km=Integer.parseInt(area.getText());
 			//	while(true) {
 					Date currentDate = new Date();
-			        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+			        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			        String currentTime=sdf.format(currentDate);
 			        List<Status>status=searching.getTweetFromListHashtag(listKey, 100, x, y, km, data.getText());
 			        if(status.size()!=0) {
@@ -172,7 +172,7 @@ public class ViewController extends SwingWorker<String, Object> implements ViewC
 			}
 			try {
 				Date currentDate = new Date();
-		        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+		        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		        String currentTime=sdf.format(currentDate);
 		        List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
 		        if(status.size()!=0) {

@@ -2,9 +2,11 @@ package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -37,6 +40,7 @@ import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.SavingAbstract;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.SearchingAbstract;
+import javafx.scene.paint.Color;
 import jdk.nashorn.tools.Shell;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -86,10 +90,10 @@ public class LauncherGuiFinal extends JFrame {
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
 		//Dimension d=getMaximumSize(); 
 		//setSize(d.width, d.height);
-		setSize(1920,1080);
+		setSize(1480,920);
 		setTitle("Twitter Analysis");
 		setVisible(true);
-		setResizable(true);
+		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		add(new InitialPanel());
 		giorno.setEditable(false);
@@ -100,6 +104,8 @@ public class LauncherGuiFinal extends JFrame {
 		insertHashtagAvanzata.setEnabled(false);
 		buttonFileAvanzata.setEnabled(false);
 		removeHashtagAvanzata.setEnabled(false);
+		searchAvanzata.setEnabled(false);
+		removeHashtag.setEnabled(false);
 
 		
 	}//Constructor
@@ -109,11 +115,14 @@ public class LauncherGuiFinal extends JFrame {
 			panelContainer.setLayout(new GridLayout(1,2));
 			setLayout(new GridLayout(1,2));
 			normalResearch.setLayout(new GridBagLayout());
+			JLabel normalLabel=new JLabel("RICERCA STANDARD");
+			Font font = new Font("Courier", Font.BOLD,22);
+			normalLabel.setFont(font);
 			GridBagConstraints gbcNR = new GridBagConstraints();
 			gbcNR.fill = GridBagConstraints.HORIZONTAL;
 	        gbcNR.gridx = 0;
 	        gbcNR.gridy = 0;
-			normalResearch.add(new JLabel("RICERCA NORMALE"), gbcNR);
+			normalResearch.add(normalLabel, gbcNR);
 	        gbcNR.gridx = 0;
 	        gbcNR.gridy = 1;
 			normalResearch.add(hashtagLabel, gbcNR);
@@ -129,6 +138,7 @@ public class LauncherGuiFinal extends JFrame {
 					if(!hashtag.getText().equals("")) {
 						listModel.addElement(hashtag.getText());
 						hashtag.setText("");	
+						removeHashtag.setEnabled(true);
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Nessun hashtag inserito","Errore", JOptionPane.ERROR_MESSAGE);
@@ -166,10 +176,12 @@ public class LauncherGuiFinal extends JFrame {
 
 			advanceResearch.setLayout(new GridBagLayout());
 			GridBagConstraints gbcAR = new GridBagConstraints();
+			JLabel labelAvanzata=new JLabel("RICERCA AVANZATA");
+			labelAvanzata.setFont(font);
 			gbcAR.fill = GridBagConstraints.HORIZONTAL;
 			gbcAR.gridx = 0;
 	        gbcAR.gridy = 0;
-	        advanceResearch.add(new JLabel("RICERCA AVANZATA"), gbcAR);
+	        advanceResearch.add(labelAvanzata, gbcAR);
 	        gbcAR.gridx = 0;
 	        gbcAR.gridy = 1;
 	        advanceResearch.add(giornoLabel, gbcAR);
@@ -209,6 +221,7 @@ public class LauncherGuiFinal extends JFrame {
 					if(!listHashtag.getText().equals("")) {
 						listModelAvanzata.addElement(listHashtag.getText());
 						listHashtag.setText("");	
+						removeHashtagAvanzata.setEnabled(true);
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Nessun hashtag inserito","Errore", JOptionPane.ERROR_MESSAGE);
@@ -242,16 +255,22 @@ public class LauncherGuiFinal extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e){
 					listModelAvanzata.removeAllElements();
+					removeHashtagAvanzata.setEnabled(false);
 					}});
 	        removeHashtag.addMouseListener(new MouseAdapter(){
 				@Override
 				public void mouseClicked(MouseEvent e){
 					listModel.removeAllElements();
+					removeHashtag.setEnabled(false);
 					}});
 			containerTable.add(panelTable, BorderLayout.NORTH);
 			containerDati.setLayout(new GridLayout(3,1));
 			containerDati.add(normalResearch);
 			containerDati.add(advanceResearch);
+			String url="icon.png";
+			ImageIcon icone=new ImageIcon(url);
+			JLabel label=new JLabel(icone, JLabel.CENTER);
+			containerDati.add(label);
 			add(panelContainer);
 			panelContainer.add(containerDati);
 			panelContainer.add(panelTable);
@@ -268,11 +287,15 @@ public class LauncherGuiFinal extends JFrame {
 						hashtag.setEditable(false);
 						buttonFileAvanzata.setEnabled(true);
 						buttonFile.setEnabled(false);
-						removeHashtagAvanzata.setEnabled(true);
+					//	removeHashtagAvanzata.setEnabled(true);
 						search.setEnabled(false);
 						searchAvanzata.setEnabled(true);
 						insertHashtag.setEnabled(false);
 						removeHashtag.setEnabled(false);
+						if(listModelAvanzata.isEmpty())
+							removeHashtagAvanzata.setEnabled(false);
+						else
+							removeHashtagAvanzata.setEnabled(true);
 					}
 					else if(!check.isSelected()) {
 						giorno.setText("yyyy_mm_dd");
@@ -292,7 +315,11 @@ public class LauncherGuiFinal extends JFrame {
 						search.setEnabled(true);
 						searchAvanzata.setEnabled(false);
 						insertHashtag.setEnabled(true);
-						removeHashtag.setEnabled(true);
+					//	removeHashtag.setEnabled(true);
+						if(listModel.isEmpty())
+							removeHashtag.setEnabled(false);
+						else
+							removeHashtag.setEnabled(true);
 					}
 				}});
 			hashtag.addMouseListener(new MouseAdapter(){
