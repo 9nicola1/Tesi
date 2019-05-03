@@ -53,7 +53,25 @@ public abstract class SearchingAbstract {
 	 * @throws TwitterException
 	 */
 	public abstract List<Status> getTweetFromHashtag(String hashtag, int count)throws TwitterException;
+	
+	
+	/**
+	 * 
+	 * @param hashtag
+	 * @param count
+	 * @return Ritorna una lista contenente gli stati sulla HomePage di Twitter usando le parole chiavi 
+	 * @throws TwitterException
+	 */
+	public abstract List<Status> getTweetFromListHashtag(List<String>hashtag, int count, double latitude, double longitude, int km, String date)throws TwitterException;
 
+	/**
+	 * 
+	 * @param hashtag
+	 * @param count
+	 * @return  Ritorna una lista contenente gli stati sulla HomePage di Twitter usando le parole chiavi 
+	 * @throws TwitterException
+	 */
+	public abstract List<Status> getTweetFromListHashtag(List<String> hashtag, int count) throws TwitterException;
 	
 
 }//SearchingAbstract

@@ -6,6 +6,8 @@ import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.*;
 import java.io.IOException;
 import java.util.*;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -21,15 +23,19 @@ public class Launcher {
 		String keyWord="#earthquake";
 		String nameFile="C:\\Users\\Nicola\\Desktop\\statiTwitter.csv";
 		saving=new Saving();
+		LinkedList<String>list=new LinkedList<String>();
+		list.add("#earthquake");
+		list.add("#magnitude");
 		List<Status>status=null;
 		try {
-			status=searching.getTweetFromHashtagAndLocation("#Cosenza", 100, 39.3099931, 16.2501929, 20, "2019_04_09");
+			status=searching.getTweetFromListHashtag(list, 100, 66.24, -157.199, 100, "2019_05_03");
 			for(Status s:status)
 				System.out.println(s);
-			saving.saveListOnCSV(status, nameFile);		
-		}catch(TwitterException | IOException e) {
+	//		saving.saveListOnCSV(status, nameFile);		
+		}catch(TwitterException  e) {
 			e.printStackTrace();
 		}
+		System.out.println(status.size());
 
 	}//main
 

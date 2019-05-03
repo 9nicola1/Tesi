@@ -3,9 +3,12 @@ package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
@@ -20,7 +23,7 @@ public class ViewController extends SwingWorker<String, Object> implements ViewC
 	private ThreadSearching threadSearching=new ThreadSearching();
 	
 	@Override
-	public void search(Searching searching, JTextField hashtag, JTextField latitudine, JTextField longitudine,
+	public void normalSearch(Searching searching, JTextField hashtag, JTextField latitudine, JTextField longitudine,
 			JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving, JCheckBox check) {
 		if(pathFile.equals("Nessun file scelto")|| pathFile.equals(""))
 			JOptionPane.showMessageDialog(null, "File non selezionato!","Errore", JOptionPane.ERROR_MESSAGE);
@@ -106,4 +109,89 @@ public class ViewController extends SwingWorker<String, Object> implements ViewC
 			
 		}
 	}
+
+
+	@Override
+	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine, JTextField longitudine,
+			JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving) {
+		if(listModel.size()==0) {
+			JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
+		}
+		LinkedList<String>listKey=new LinkedList<String>();
+		for(int i=0; i<listModel.size(); i++) {
+			listKey.add(listModel.getElementAt(i));
+		}
+		if(!latitudine.getText().equals("") && !latitudine.getText().equals("Es. 39.3099931")
+				&& !longitudine.getText().equals("") && !longitudine.getText().equals("Es. 16.2501929")
+				&& !area.getText().equals("") && !area.getText().equals("Specificare l'area di circonferenza, in miglia")) {
+			try {
+				double lat=Double.parseDouble(latitudine.getText());
+				double lon=Double.parseDouble(longitudine.getText());
+				long x=(long) lat;
+				long y=(long)lon;
+				int km=Integer.parseInt(area.getText());
+			//	while(true) {
+					Date currentDate = new Date();
+			        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+			        String currentTime=sdf.format(currentDate);
+			        List<Status>status=searching.getTweetFromListHashtag(listKey, 100, x, y, km, data.getText());
+			        if(status.size()!=0) {
+				        for(Status s:status) {
+							Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+									(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
+									(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
+							panelTable.dtm.addRow(obj);
+						}
+				        saving.saveStatusAndImageAndOthers(status, pathFile);
+				//		Thread.sleep(10000);
+				    }else{
+				    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
+	
+				    }
+			//	}
+			}catch(Exception e1) {
+				JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+			}	
+		}
+	}//advanceSearch
+
+
+	@Override
+	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable, Saving saving) {
+		if(listModel.size()==0) {
+			JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
+		}
+		else if(pathFile.equals("")) {
+			JOptionPane.showMessageDialog(null, "Nessun file selezionato su cui salvare.","Attenzione", JOptionPane.INFORMATION_MESSAGE);
+		}
+		else {
+			LinkedList<String>listKey=new LinkedList<String>();
+			for(int i=0; i<listModel.size(); i++) {
+				listKey.add(listModel.getElementAt(i));
+			}
+			try {
+				Date currentDate = new Date();
+		        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+		        String currentTime=sdf.format(currentDate);
+		        List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
+		        if(status.size()!=0) {
+			        for(Status s:status) {
+						Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+								(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
+								(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
+						panelTable.dtm.addRow(obj);
+					}
+			        saving.saveStatusAndImageAndOthers(status, pathFile);
+			    }else{
+			    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
+	
+			    }
+			}catch(Exception e1) {
+				JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+			}	
+		}
+	}//normalSearch
+	
 }//Controller

@@ -62,4 +62,41 @@ public class Searching extends SearchingAbstract{
 		return list;
 	}//getTweetFromHashtag
 
+	@Override
+	public List<Status> getTweetFromListHashtag(List<String> hashtag, int count, double latitude, double longitude, int km, String date) throws TwitterException {
+		LinkedList<Status>list=new LinkedList<Status>();
+		for(String s:hashtag) {
+			Query query=new Query(s);
+			query.count(count);
+			query.setGeoCode(new GeoLocation(latitude,longitude), km, Query.MILES);
+			query.setSince(date);
+			try {
+				QueryResult result=twitter.search(query);
+				for(Status status:result.getTweets())
+					list.add(status);
+			}catch(TwitterException e) {
+				System.out.println("Errore  in getTweetFromListHashtag "+hashtag);
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}//getTweetFromListHashtag
+	
+	public List<Status> getTweetFromListHashtag(List<String> hashtag, int count) throws TwitterException {
+		LinkedList<Status>list=new LinkedList<Status>();
+		for(String s:hashtag) {
+			Query query=new Query(s);
+			query.count(count);
+			try {
+				QueryResult result=twitter.search(query);
+				for(Status status:result.getTweets())
+					list.add(status);
+			}catch(TwitterException e) {
+				System.out.println("Errore  in getTweetFromListHashtag "+hashtag);
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}//getTweetFromListHashtag
+
 }//Searching

@@ -71,7 +71,7 @@ public class LauncherGui extends JFrame{
 		setSize(1920,1080);
 		setTitle("Twitter Analysis");
 		setVisible(true);
-		setResizable(false);
+		setResizable(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		add(new InitialPanel());
 		giorno.setEditable(false);
@@ -100,9 +100,6 @@ public class LauncherGui extends JFrame{
 			containerText.add(checkLabel, BorderLayout.CENTER);
 			containerText.add(check, BorderLayout.CENTER);
 			containerText.add(search, BorderLayout.CENTER);
-
-
-	//		containerText.add(new JSeparator(JSeparator.VERTICAL),BorderLayout.LINE_START);;
 			containerTable.add(panelTable, BorderLayout.NORTH);
 			add(containerText);
 			add(containerTable);
@@ -166,7 +163,7 @@ public class LauncherGui extends JFrame{
 			search.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					controller.search(searching, hashtag, latitudine, longitudine, area, giorno, pathFile, panelTable, saving, check);
+					controller.normalSearch(searching, hashtag, latitudine, longitudine, area, giorno, pathFile, panelTable, saving, check);
 				}});
 		}//Constructor
 	}//InitialPanel
