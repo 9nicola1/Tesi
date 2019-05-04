@@ -143,6 +143,7 @@ public class ViewController extends SwingWorker<String, Object> implements ViewC
 							panelTable.dtm.addRow(obj);
 						}
 				        saving.saveStatusAndImageAndOthers(status, pathFile);
+				        saving.saveListOnTXT(status, "Staus.txt");
 				//		Thread.sleep(10000);
 				    }else{
 				    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
@@ -183,6 +184,7 @@ public class ViewController extends SwingWorker<String, Object> implements ViewC
 						panelTable.dtm.addRow(obj);
 					}
 			        saving.saveStatusAndImageAndOthers(status, pathFile);
+			        saving.saveListOnTXT(status, "Staus.txt");
 			    }else{
 			    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
 	

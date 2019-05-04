@@ -106,10 +106,14 @@ public class Saving extends SavingAbstract{
 			MediaEntity[] media = s.getMediaEntities(); //get the media entities from the status
 			int RT=s.getRetweetCount();
 			GeoLocation geoLocation=s.getGeoLocation();
-			Place place=s.getPlace();		
+			Place place=s.getPlace();	
+			Date date=s.getCreatedAt();
 	        try {
 				fw.write("AUTHOR:\r\t");
 				fw.write(author);
+				fw.write("\r\n");
+				fw.write("DATE:\r\t");
+				fw.write(date.toString());
 				fw.write("\r\n");
 				fw.write("STATUS:\r\t");
 				fw.write(status);
@@ -131,7 +135,7 @@ public class Saving extends SavingAbstract{
 					fw.write("PLACE:\r\t");
 					fw.write(place.getFullName());
 					fw.write("\r\n");
-					fw.write("GEOLOCATION:\r\t");
+					fw.write("GEO:\r\t");
 					fw.write((double) geoLocation.getLatitude()+"\r\t"+(double)geoLocation.getLongitude());
 					fw.write("\r\n");
 				}
@@ -141,7 +145,7 @@ public class Saving extends SavingAbstract{
 					fw.write("\r\n");
 				}
 				else if(geoLocation!=null) {
-					fw.write("GEOLOCATION:\r\t");
+					fw.write("GEO:\r\t");
 					fw.write((double) geoLocation.getLatitude()+"\r\t"+(double)geoLocation.getLongitude());
 					fw.write("\r\n");
 				}
@@ -151,6 +155,8 @@ public class Saving extends SavingAbstract{
 				System.out.println("Immagine o Geolocalizzazione mancante");
 			}
 	        for (MediaEntity m : media) {
+	            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+	            String currentTime2=sdf2.format(currentDate);
 	            try {
 	                URL url = new URL(m.getMediaURL());
 	                InputStream in = new BufferedInputStream(url.openStream());
@@ -163,7 +169,7 @@ public class Saving extends SavingAbstract{
 	                out.close();
 	                in.close();
 	                byte[] response = out.toByteArray();
-	                FileOutputStream fos = new FileOutputStream(file.getParent() + "\\" + m.getId() + "." + getExtension(m.getType()));
+	                FileOutputStream fos = new FileOutputStream(file.getParent() + "\\" +currentTime2+"_"+author+"_"+m.getId() + "." + getExtension(m.getType()));
 	                fos.write(response);
 	                fos.close();
 	            } catch (Exception ex) {
