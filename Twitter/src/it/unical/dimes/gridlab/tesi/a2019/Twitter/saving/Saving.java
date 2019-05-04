@@ -102,8 +102,8 @@ public class Saving extends SavingAbstract{
 		for(Status s: list) {
 			String author=s.getUser().getName();
 			String status=s.getText();
-			URLEntity[] urls=s.getURLEntities();
-
+	//		URLEntity[] urls=s.getURLEntities();
+			MediaEntity[] media = s.getMediaEntities(); //get the media entities from the status
 			int RT=s.getRetweetCount();
 			GeoLocation geoLocation=s.getGeoLocation();
 			Place place=s.getPlace();		
@@ -117,20 +117,15 @@ public class Saving extends SavingAbstract{
 				fw.write("#RT:\r\t");
 				fw.write(""+RT);
 				fw.write("\r\n");
-				if(urls.length!=0) {
-					fw.write("URL:\r\t");
-					for(int i=0; i<urls.length; i++) {
-						fw.write(urls[i].toString());
+				if(media.length!=0) {
+					for(int i=0; i<media.length; i++) {
+						fw.write("URL:\r\t");
+						fw.write(media[i].getURL());
 						fw.write("\r\n");
-					//	System.out.println("SIZE: "+urls.length);
+						fw.write("MEDIA:\r\t");
+						fw.write(media[i].getMediaURL());
+						fw.write("\r\n");
 					}
-				/*	String url="";
-		            for(URLEntity urlEntity : urls) {
-		                url = urlEntity.getURL();
-						fw.write(url);
-						fw.write("\r\n");
-		            }
-				*/	
 				}
 				if(place!=null && geoLocation!=null) {
 					fw.write("PLACE:\r\t");
@@ -155,28 +150,26 @@ public class Saving extends SavingAbstract{
 	        }catch(NullPointerException e) {
 				System.out.println("Immagine o Geolocalizzazione mancante");
 			}
-	     /*   try {
-	        	for(int i=0; i<url.length; i++) {
-	        		URL u=new URL(url[i].toString());
-	        		InputStream in = new BufferedInputStream(u.openStream());
-	        		ByteArrayOutputStream out = new ByteArrayOutputStream();
-	        		byte[] buf = new byte[1024];
-	        		int n = 0;
-	        		while (-1!=(n=in.read(buf)))
-	        		{
-	        		   out.write(buf, 0, n);
-	        		}
-	        		out.close();
-	        		in.close();
-	        		byte[] response = out.toByteArray();
-	        		FileOutputStream fos = new FileOutputStream("C:\\Users\\Nicola\\Desktop\\DatiTwitter\\"+currentTime+"_"+author+".jpg");
-	        		fos.write(response);
-	        		fos.close();
-				}
-	        }catch(IOException e) {
-	        	System.out.println("Errore durante la fase di estrazione dell'immagine");
-	        	e.printStackTrace();
-	        }*/
+	        for (MediaEntity m : media) {
+	            try {
+	                URL url = new URL(m.getMediaURL());
+	                InputStream in = new BufferedInputStream(url.openStream());
+	                ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                byte[] buf = new byte[1024];
+	                int n = 0;
+	                while (-1 != (n = in.read(buf))) {
+	                    out.write(buf, 0, n);
+	                }
+	                out.close();
+	                in.close();
+	                byte[] response = out.toByteArray();
+	                FileOutputStream fos = new FileOutputStream(file.getParent() + "\\" + m.getId() + "." + getExtension(m.getType()));
+	                fos.write(response);
+	                fos.close();
+	            } catch (Exception ex) {
+	                ex.printStackTrace();
+	            }
+	        }
 		}
 		fw.write("\r\n");
 		fw.write("\r\n");
@@ -184,5 +177,17 @@ public class Saving extends SavingAbstract{
 		fw.write("\r\n");
 		fw.close();	
 	}//saveStatusAndImageAndOthers
+	
+	private String getExtension(String type) {
+        if (type.equals("photo")) {
+            return "jpg";
+        } else if (type.equals("video")) {
+            return "mp4";
+        } else if (type.equals("animated_gif")) {
+            return "gif";
+        } else {
+            return "err";
+        }
+    }
 
 }//Saving

@@ -10,12 +10,14 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -35,6 +37,8 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 
+import org.omg.CORBA.portable.InputStream;
+
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher.LauncherGui.InitialPanel;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.SavingAbstract;
@@ -52,7 +56,7 @@ public class LauncherGuiFinal extends JFrame {
 	private static Searching searching=null;
 	private static Saving saving=new Saving();
 	private JTextField hashtag=new JTextField("");
-	private JLabel hashtagLabel=new JLabel("HashTag");
+	private JLabel hashtagLabel=new JLabel("HashTag / Parole Chiavi");
 	private JButton buttonFile=new JButton("SCEGLI DOVE SALVARE");
 	private JButton buttonFileAvanzata=new JButton("SCEGLI DOVE SALVARE");
 	private JLabel checkLabel=new JLabel("Ricerca avanzata");
@@ -71,7 +75,7 @@ public class LauncherGuiFinal extends JFrame {
 	private String pathFileAvanzata="";
 	private JButton search=new JButton("AVVIA");
 	private JButton searchAvanzata=new JButton("AVVIA");
-	private JLabel listHashtagLabel=new JLabel("Parole chiavi");
+	private JLabel listHashtagLabel=new JLabel("HashTag / Parole Chiavi");
 	private JTextField listHashtag=new JTextField(12);
 	private JButton insertHashtagAvanzata=new JButton("INSERISCI HASHTAG");
 	private JButton insertHashtag=new JButton("INSERISCI HASHTAG");
@@ -86,10 +90,13 @@ public class LauncherGuiFinal extends JFrame {
 	private DefaultListModel<String> listModel = new DefaultListModel<>();
 	private DefaultListModel<String> listModelAvanzata = new DefaultListModel<>();
 	private ViewController controller=new ViewController();
+	private Object frame;
 	public LauncherGuiFinal() {
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
 		//Dimension d=getMaximumSize(); 
 		//setSize(d.width, d.height);
+		ImageIcon img = new ImageIcon("icon.png");
+		setIconImage(img.getImage());
 		setSize(1480,920);
 		setTitle("Twitter Analysis");
 		setVisible(true);
@@ -145,9 +152,11 @@ public class LauncherGuiFinal extends JFrame {
 					}
 				}});
 	        final JList<String> listKey =new JList<String>(listModel);
+			JScrollPane scrollPane=new JScrollPane(listKey);
+			scrollPane.setPreferredSize(new Dimension(50,50));
 	        gbcNR.gridx = 0;
 	        gbcNR.gridy = 3;
-	        normalResearch.add(listKey, gbcNR);
+	        normalResearch.add(scrollPane, gbcNR);
 	        gbcNR.gridx = 1;
 	        gbcNR.gridy = 3;
 	        normalResearch.add(removeHashtag, gbcNR);
@@ -228,9 +237,11 @@ public class LauncherGuiFinal extends JFrame {
 					}
 				}});
 	        final JList<String> listKeyAvanzata =new JList<String>(listModelAvanzata);
+			JScrollPane scrollPaneAvanzata=new JScrollPane(listKeyAvanzata);
+			scrollPaneAvanzata.setPreferredSize(new Dimension(50,50));
 	        gbcAR.gridx = 0;
 	        gbcAR.gridy = 7;
-	        advanceResearch.add(listKeyAvanzata, gbcAR);
+	        advanceResearch.add(scrollPaneAvanzata, gbcAR);
 	        gbcAR.gridx = 1;
 	        gbcAR.gridy = 7;
 	        advanceResearch.add(removeHashtagAvanzata, gbcAR);
@@ -383,7 +394,7 @@ public class LauncherGuiFinal extends JFrame {
 				}});
 		}//Constructor
 	}//InitialPanel
-	public static void main(String...args) {
+	public static void main(String...args) throws IOException {
 		LauncherGuiFinal launcher=new LauncherGuiFinal();
 	}
 }

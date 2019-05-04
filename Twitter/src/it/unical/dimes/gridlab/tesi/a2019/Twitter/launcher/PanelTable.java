@@ -4,10 +4,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,6 +35,7 @@ public class PanelTable extends JPanel{
 	public PanelTable(){
 		setLayout(new GridBagLayout());
 		JLabel label=new JLabel("RISULTATI RICERCA");
+		JButton button=new JButton("SVUOTA TABELLA");
 		Font font = new Font("Courier", Font.BOLD,22);
 		label.setFont(font);
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -48,5 +53,21 @@ public class PanelTable extends JPanel{
 	    gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = 2;
 		add(scrollPane, gbc);
-	}
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridwidth = 2;
+		add(button, gbc);
+        button.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if(dtm.getRowCount()==0) {
+					JOptionPane.showMessageDialog(null, "Tabella vuota!","ATTENZIONE", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else {
+					while(dtm.getRowCount()!=0)
+						dtm.removeRow(0);
+				}
+			}});
+	}//Constructor
 }//PanelTable
