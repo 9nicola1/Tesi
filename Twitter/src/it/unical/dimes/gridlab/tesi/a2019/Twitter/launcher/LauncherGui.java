@@ -8,6 +8,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -27,6 +29,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,6 +42,9 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 import org.omg.CORBA.portable.InputStream;
+
+import com.sun.glass.events.WindowEvent;
+
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.SavingAbstract;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
@@ -87,16 +95,52 @@ public class LauncherGui extends JFrame {
 	private DefaultListModel<String> listModel = new DefaultListModel<>();
 	private DefaultListModel<String> listModelAvanzata = new DefaultListModel<>();
 	private ViewController controller=new ViewController();
-	private Object frame;
+	private JMenu setting, informazioni;
+	private JMenuItem aggiornaConfigurazione, esci, help;
+	private JMenuBar menuBar;
 	public LauncherGui() {
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
 		//Dimension d=getMaximumSize(); 
 		//setSize(d.width, d.height);
+		menuBar=new JMenuBar();
+		this.setJMenuBar(menuBar);
+		setting=new JMenu("Impostazioni");
+		informazioni=new JMenu("Informazioni");
+		aggiornaConfigurazione=new JMenuItem("Configura impostazioni");
+		esci=new JMenuItem("Esci");
+		help=new JMenuItem("Aiuto");
+		menuBar.add(setting);menuBar.add(informazioni);
+		setting.add(aggiornaConfigurazione);
+		setting.add(esci);
+		informazioni.add(help);
+		esci.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		help.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String info="QUAKETTER\nIl programma permette di ricercare gli stati su Twitter tramite parole chiavi.\nPer maggiori informazioni sulla ricerca avanzata "
+						+"cliccare sul logo.";
+	       		JOptionPane.showMessageDialog(null, info,"Informazioni", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		aggiornaConfigurazione.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new ConfigurationPanel();
+			}
+		});
+
+		
 		ImageIcon img = new ImageIcon(("it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\icon.png"));
 		setIconImage(img.getImage());
 		setSize(1480,920);
 		setTitle("Quaketter");
 		setVisible(true);
+		setLocation(200,80);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		add(new InitialPanel());
@@ -113,6 +157,74 @@ public class LauncherGui extends JFrame {
 
 		
 	}//Constructor
+	
+	class ConfigurationPanel extends JFrame{
+		private JTextField APIKey=new JTextField(16);
+		private JTextField APISecret=new JTextField(16);
+		private JTextField AccessToken=new JTextField(16);
+		private JTextField AccessTokenSecret=new JTextField(16);
+		private JLabel APIKeyLabel=new JLabel("API Key");
+		private JLabel APISecretLabel=new JLabel("API Secret");
+		private JLabel AccessTokenLabel=new JLabel("Access Token");
+		private JLabel AccessTokenSecretLabel=new JLabel("Access Token Secret");
+		private JButton button=new JButton("MODIFICA PARAMETRI");
+		public ConfigurationPanel() {
+			ImageIcon img = new ImageIcon(("it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\icon.png"));
+			setIconImage(img.getImage());
+			setSize(500,300);
+			setLocation(700,400);
+			setTitle("Configurazione Impostazioni");
+			setVisible(true);
+			setResizable(false);
+			setLayout(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.gridx = 0;
+	        gbc.gridy = 0;
+	        add(APIKeyLabel, gbc);
+	        gbc.gridx = 1;
+	        gbc.gridy = 0;
+	        add(APIKey, gbc);
+	        gbc.gridx = 0;
+	        gbc.gridy = 1;
+	        add(APISecretLabel, gbc);
+	        gbc.gridx = 1;
+	        gbc.gridy = 1;
+	        add(APISecret, gbc);
+	        gbc.gridx = 0;
+	        gbc.gridy = 2;
+	        add(AccessTokenLabel, gbc);
+	        gbc.gridx = 1;
+	        gbc.gridy = 2;
+	        add(AccessToken, gbc);
+	        gbc.gridx = 0;
+	        gbc.gridy = 3;
+	        add(AccessTokenSecretLabel, gbc);
+	        gbc.gridx = 1;
+	        gbc.gridy = 3;
+	        add(AccessTokenSecret, gbc);
+	        gbc.gridx = 0;
+	        gbc.gridy = 4;
+		    gbc.fill = GridBagConstraints.HORIZONTAL;
+	        gbc.gridwidth = 2;
+	        add(button,gbc);
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						if(APIKey.getText().equals("") || APISecret.getText().equals("") || AccessToken.getText().equals("") || AccessTokenSecret.getText().equals(""))
+							JOptionPane.showMessageDialog(null, "Attenzione i parametri forniti non sono corretti.\nControllare le chiavi su: https://developer.twitter.com/en/apps/","Parametri Errati", JOptionPane.ERROR_MESSAGE);
+						else {
+							searching=new Searching(APIKey.getText(), APISecret.getText(), AccessToken.getText(), AccessTokenSecret.getText());
+							setVisible(false); //you can't see me!
+							dispose(); //Destroy the JFrame object
+						}
+					}catch(Exception e) {
+						JOptionPane.showMessageDialog(null, "Attenzione i parametri forniti non sono corretti.\nControllare le chiavi su: https://developer.twitter.com/en/apps/16206932","Parametri Errati", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+		}//Constructor
+	}//ConfigurationPanel
 	
 	class InitialPanel extends JPanel{
 		public InitialPanel() {
@@ -279,6 +391,13 @@ public class LauncherGui extends JFrame {
 			ImageIcon icone=new ImageIcon((url));
 			JLabel label=new JLabel(icone, JLabel.CENTER);
 			containerDati.add(label);
+			final String info="GIORNO: yyyy/mm/dd\nLATITUDINE: Es. 39.3099931\nLONGITUDINE: Es. 16.2501929\nAREA: Area in Miglia";
+			label.addMouseListener(new MouseAdapter() {
+		       	@Override
+		       	public void mouseClicked(MouseEvent evt) {
+		       		JOptionPane.showMessageDialog(null, info,"Informazioni Ricerca Avanzata", JOptionPane.INFORMATION_MESSAGE);
+		       	}
+	        });
 			add(panelContainer);
 			panelContainer.add(containerDati);
 			panelContainer.add(panelTable);
@@ -382,12 +501,12 @@ public class LauncherGui extends JFrame {
 			search.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					controller.normalSearch(searching, listModel, pathFile, panelTable, saving);
+					controller.normalSearch(searching, listModel, pathFile, panelTable, saving, search);
 				}});
 			searchAvanzata.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable, saving);
+					controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable, saving, searchAvanzata);
 				}});
 		}//Constructor
 	}//InitialPanel

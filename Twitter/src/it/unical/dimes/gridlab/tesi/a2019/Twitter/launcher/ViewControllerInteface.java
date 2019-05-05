@@ -1,6 +1,7 @@
 package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JTextField;
@@ -14,19 +15,6 @@ import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
  *
  */
 public interface ViewControllerInteface {
-	
-	/**
-	 * Questo metodo si occupa di ricercare i dati forniti dall'utente
-	 * @param searching
-	 * @param hashtag
-	 * @param latitudine
-	 * @param longitudine
-	 * @param area
-	 * @param data
-	 * @param pathFile
-	 */
-	public void normalSearch(Searching searching, JTextField hashtag, JTextField latitudine, JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving, JCheckBox check);
-	
 	/**
 	 * 
 	 * @param searching
@@ -35,7 +23,7 @@ public interface ViewControllerInteface {
 	 * @param panelTable
 	 * @param saving
 	 */
-	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile, PanelTable panelTable, Saving saving);
+	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile, PanelTable panelTable, Saving saving, JButton avvia);
 	
 	/**
 	 * Questo metodo si occupa di ricercare i dati forniti dall'utente
@@ -49,5 +37,5 @@ public interface ViewControllerInteface {
 	 * @param panelTable
 	 * @param saving
 	 */
-	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine, JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving);
+	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine, JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving, JButton avvia);
 }//search

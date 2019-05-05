@@ -171,8 +171,11 @@ public class Saving extends SavingAbstract{
 						fw.write("\r\n");
 		                fos.write(response);
 		                fos.close();
-		            } catch (Exception ex) {
+		            } catch (FileNotFoundException ex) {
 		                ex.printStackTrace();
+		                String path=file.getParent() + "\\" +currentTime2+"_"+m.hashCode() + "." + getExtension(m.getType());
+		                FileOutputStream fos = new FileOutputStream(path);
+		                System.out.println(path);
 		            }
 		        }
 				fw.write("\r\n");

@@ -1,140 +1,91 @@
 package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
 import twitter4j.Status;
-import twitter4j.TwitterException;
-import twitter4j.URLEntity;
 
-public class ViewController extends SwingWorker<String, Object> implements ViewControllerInteface {
-	private ThreadSearching threadSearching=new ThreadSearching();
+public class ViewController extends Thread implements ViewControllerInteface{
+	private Searching searching;
+	private DefaultListModel<String> listModel;
+	private JTextField latitudine;
+	private JTextField longitudine;
+	private JTextField area; 
+	private JTextField data;
+	private String pathFile;
+	private PanelTable panelTable;
+	private Saving saving;
+	private JButton avvia;
+	private boolean normal=false;
+	private boolean advance=false;
+
+
+	@Override
+	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable, Saving saving, JButton avvia) {
+		this.searching=searching;
+		this.listModel=listModel;
+		this.pathFile=pathFile;
+		this.panelTable=panelTable;
+		this.saving=saving;
+		this.avvia=avvia;
+		normal=true;
+		advance=false;
+		Thread thread=new Thread(this);
+		thread.start();
+	}//normalSearch
+
+	@Override
+	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine,
+			JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable,
+			Saving saving, JButton avvia) {
+		this.searching=searching;
+		this.listModel=listModel;
+		this.latitudine=latitudine;
+		this.longitudine=longitudine;
+		this.area=area;
+		this.data=data;
+		this.pathFile=pathFile;
+		this.panelTable=panelTable;
+		this.saving=saving;
+		this.avvia=avvia;
+		normal=false;
+		advance=true;
+		Thread thread=new Thread(this);
+		thread.start();;
+	}//advanceSearch
 	
 	@Override
-	public void normalSearch(Searching searching, JTextField hashtag, JTextField latitudine, JTextField longitudine,
-			JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving, JCheckBox check) {
-		if(pathFile.equals("Nessun file scelto")|| pathFile.equals(""))
-			JOptionPane.showMessageDialog(null, "File non selezionato!","Errore", JOptionPane.ERROR_MESSAGE);
-		if(hashtag.getText().equals("")|| hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")) {
-			JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
-			hashtag.setText("");
-		}
-		else if(!hashtag.getText().equals("")&& !hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")
-				&& !latitudine.getText().equals("") && !latitudine.getText().equals("Es. 39.3099931")
-				&& !longitudine.getText().equals("") && !longitudine.getText().equals("Es. 16.2501929")
-				&& !area.getText().equals("") && !area.getText().equals("Specificare l'area di circonferenza, in miglia")) {
-			try {
-				double lat=Double.parseDouble(latitudine.getText());
-				double lon=Double.parseDouble(longitudine.getText());
-				long x=(long) lat;
-				long y=(long)lon;
-				int km=Integer.parseInt(area.getText());
-				while(true) {
-					Date currentDate = new Date();
-			        SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
-			        String currentTime=sdf.format(currentDate);
-			        List<Status>status=searching.getTweetFromHashtagAndLocation(hashtag.getText(), 100, x, y, km, currentTime);
-			        if(status.size()!=0) {
-				        for(Status s:status) {
-							System.out.println(s);
-							Object[]obj= {currentTime, s.getText().toString()};
-							panelTable.dtm.addRow(obj);
-						}
-						saving.saveListOnCSV(status, pathFile);
-						Thread.sleep(10000);
-				    }else{
-				    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
-						hashtag.setText("");
-				    }
-				}
-			}catch(Exception e1) {
-				JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
-				e1.printStackTrace();
-
-			}						
-		}
-		else if(!hashtag.getText().equals("") && !hashtag.getText().equals("Scrivi qui uno o piu' hashtag separati da virgole")){
-			if(!pathFile.equals("")) {
-				String keyWord=hashtag.getText();
-				List<Status>status=null;
-				try {
-				//	while(true) {
-						status=null;
-						status=searching.getTweetFromHashtag(keyWord, 100);
-						Date currentDate = new Date();
-				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-				        String currentTime=sdf.format(currentDate);
-				    //    threadSearching.sleepAndUpdate(900000, panelTable, currentTime, status);
-						saving.saveStatusAndImageAndOthers(status, pathFile);	
-						if(status.size()!=0) {
-							for(Status s:status) {
-								Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
-										(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
-										(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
-								panelTable.dtm.addRow(obj);
-							}
-							panelTable.repaint();
-
-						//	Thread.sleep(900000);	//15 minuti
-						}else{
-							JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
-							hashtag.setText("");
-						}
-			//		}
-				}catch(TwitterException | IOException e1) {
-					JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
-
-					e1.printStackTrace();
-				}
+	public void run() {
+		if(normal) {
+			avvia.setText("Ricerca in corso...");
+			avvia.setEnabled(false);
+			if(listModel.size()==0) {
+				JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
 			}
-		}
-	}//search
-	
-	
-	@Override
-	protected String doInBackground() throws Exception {
-		while(true) {
-			
-		}
-	}
-
-
-	@Override
-	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine, JTextField longitudine,
-			JTextField area, JTextField data, String pathFile, PanelTable panelTable, Saving saving) {
-		if(listModel.size()==0) {
-			JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
-		}
-		LinkedList<String>listKey=new LinkedList<String>();
-		for(int i=0; i<listModel.size(); i++) {
-			listKey.add(listModel.getElementAt(i));
-		}
-		if(!latitudine.getText().equals("") && !latitudine.getText().equals("Es. 39.3099931")
-				&& !longitudine.getText().equals("") && !longitudine.getText().equals("Es. 16.2501929")
-				&& !area.getText().equals("") && !area.getText().equals("Specificare l'area di circonferenza, in miglia")) {
-			try {
-				double lat=Double.parseDouble(latitudine.getText());
-				double lon=Double.parseDouble(longitudine.getText());
-				long x=(long) lat;
-				long y=(long)lon;
-				int km=Integer.parseInt(area.getText());
-			//	while(true) {
+			else if(pathFile.equals("")) {
+				JOptionPane.showMessageDialog(null, "Nessun file selezionato su cui salvare.","Attenzione", JOptionPane.INFORMATION_MESSAGE);
+			}
+			else {
+				LinkedList<String>listKey=new LinkedList<String>();
+				for(int i=0; i<listModel.size(); i++) {
+					listKey.add(listModel.getElementAt(i));
+				}
+				try {
 					Date currentDate = new Date();
 			        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			        String currentTime=sdf.format(currentDate);
-			        List<Status>status=searching.getTweetFromListHashtag(listKey, 100, x, y, km, data.getText());
+			        List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
 			        if(status.size()!=0) {
 				        for(Status s:status) {
 							Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
@@ -144,56 +95,64 @@ public class ViewController extends SwingWorker<String, Object> implements ViewC
 						}
 				        saving.saveStatusAndImageAndOthers(status, pathFile);
 				        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
-				//		Thread.sleep(10000);
 				    }else{
 				    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
-	
+		
 				    }
-			//	}
-			}catch(Exception e1) {
-				JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
-				e1.printStackTrace();
-			}	
-		}
-	}//advanceSearch
-
-
-	@Override
-	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable, Saving saving) {
-		if(listModel.size()==0) {
-			JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
-		}
-		else if(pathFile.equals("")) {
-			JOptionPane.showMessageDialog(null, "Nessun file selezionato su cui salvare.","Attenzione", JOptionPane.INFORMATION_MESSAGE);
-		}
-		else {
+				}catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+				}	
+			}
+			avvia.setText("AVVIA");
+			avvia.setEnabled(true);
+		}else if(advance) {
+			avvia.setText("Ricerca in corso...");
+			avvia.setEnabled(false);
+			if(listModel.size()==0) {
+				JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
+			}
 			LinkedList<String>listKey=new LinkedList<String>();
 			for(int i=0; i<listModel.size(); i++) {
 				listKey.add(listModel.getElementAt(i));
 			}
-			try {
-				Date currentDate = new Date();
-		        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		        String currentTime=sdf.format(currentDate);
-		        List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
-		        if(status.size()!=0) {
-			        for(Status s:status) {
-						Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
-								(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
-								(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
-						panelTable.dtm.addRow(obj);
-					}
-			        saving.saveStatusAndImageAndOthers(status, pathFile);
-			        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
-			    }else{
-			    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
-	
-			    }
-			}catch(Exception e1) {
-				JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
-				e1.printStackTrace();
-			}	
+			if(!latitudine.getText().equals("") && !latitudine.getText().equals("Es. 39.3099931")
+					&& !longitudine.getText().equals("") && !longitudine.getText().equals("Es. 16.2501929")
+					&& !area.getText().equals("") && !area.getText().equals("Specificare l'area di circonferenza, in miglia")) {
+				try {
+					double lat=Double.parseDouble(latitudine.getText());
+					double lon=Double.parseDouble(longitudine.getText());
+					long x=(long) lat;
+					long y=(long)lon;
+					int km=Integer.parseInt(area.getText());
+				//	while(true) {
+						Date currentDate = new Date();
+				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				        String currentTime=sdf.format(currentDate);
+				        List<Status>status=searching.getTweetFromListHashtag(listKey, 100, x, y, km, data.getText());
+				        if(status.size()!=0) {
+					        for(Status s:status) {
+								Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+										(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
+										(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
+								panelTable.dtm.addRow(obj);
+							}
+					        saving.saveStatusAndImageAndOthers(status, pathFile);
+					        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
+					//		Thread.sleep(10000);
+					    }else{
+					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
+		
+					    }
+				//	}
+				}catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+				}	
+			}
+			avvia.setText("AVVIA");
+			avvia.setEnabled(true);
 		}
-	}//normalSearch
-	
-}//Controller
+	}//run
+
+}//ViewController
