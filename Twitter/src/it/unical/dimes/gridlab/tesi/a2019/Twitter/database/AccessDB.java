@@ -1,4 +1,4 @@
-package it.unical.dimes.gridlab.tesi.a2019.Twitter.test;
+package it.unical.dimes.gridlab.tesi.a2019.Twitter.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

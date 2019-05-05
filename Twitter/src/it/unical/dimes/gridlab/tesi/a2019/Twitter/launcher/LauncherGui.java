@@ -67,7 +67,7 @@ public class LauncherGui extends JFrame {
 	private JLabel pathFileLabel=new JLabel("Nessun file scelto");
 	private JLabel pathFileLabelAvanzata=new JLabel("Nessun file scelto");
 	private JLabel giornoLabel=new JLabel("Giorno");
-	private JTextField giorno=new JTextField("yyyy_mm_dd");
+	private JTextField giorno=new JTextField("yyyy/mm/dd");
 	private String pathFile="";
 	private String pathFileAvanzata="";
 	private JButton search=new JButton("AVVIA");
@@ -95,7 +95,7 @@ public class LauncherGui extends JFrame {
 		ImageIcon img = new ImageIcon(("it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\icon.png"));
 		setIconImage(img.getImage());
 		setSize(1480,920);
-		setTitle("Twitter Analysis");
+		setTitle("Quaketter");
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -275,7 +275,7 @@ public class LauncherGui extends JFrame {
 			containerDati.setLayout(new GridLayout(3,1));
 			containerDati.add(normalResearch);
 			containerDati.add(advanceResearch);
-			String url="it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\\\icon.png";
+			String url="it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\\\icon2.png";
 			ImageIcon icone=new ImageIcon((url));
 			JLabel label=new JLabel(icone, JLabel.CENTER);
 			containerDati.add(label);

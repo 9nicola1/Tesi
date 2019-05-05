@@ -25,14 +25,16 @@ public class Launcher {
 		saving=new Saving();
 		LinkedList<String>list=new LinkedList<String>();
 		list.add("#earthquake");
-		list.add("#magnitude");
+//		list.add("#magnitude");
 		List<Status>status=null;
 		try {
-			status=searching.getTweetFromHashtag("#Cosenza", 100);
-			//status=searching.getTweetFromListHashtag(list, 100, 66.24, -157.199, 100, "2019_05_03");
-		//	for(Status s:status)
-		//		System.out.println(s);
-			saving.saveStatusAndImageAndOthers(status, nameFile);	
+			//status=searching.getTweetFromHashtag("#Cosenza", 100);
+			status=searching.getTweetFromListHashtag(list, 100, 36.8108, -117.5262, 150, "2019/05/05");
+			for(Status s:status) {
+				System.out.println(s.getUser().getName());
+				System.out.println(s.getText());
+			}
+		//	saving.saveStatusAndImageAndOthers(status, nameFile);	
 		}catch(TwitterException  e) {
 			e.printStackTrace();
 		}

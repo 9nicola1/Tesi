@@ -149,33 +149,37 @@ public class Saving extends SavingAbstract{
 					fw.write((double) geoLocation.getLatitude()+"\r\t"+(double)geoLocation.getLongitude());
 					fw.write("\r\n");
 				}
+			   for (MediaEntity m : media) {
+		            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+		            String currentTime2=sdf2.format(currentDate);
+		            try {
+		                URL url = new URL(m.getMediaURL());
+		                InputStream in = new BufferedInputStream(url.openStream());
+		                ByteArrayOutputStream out = new ByteArrayOutputStream();
+		                byte[] buf = new byte[1024];
+		                int n = 0;
+		                while (-1 != (n = in.read(buf))) {
+		                    out.write(buf, 0, n);
+		                }
+		                out.close();
+		                in.close();
+		                byte[] response = out.toByteArray();
+		                String path=file.getParent() + "\\" +currentTime2+"_"+author+"_"+m.getId() + "." + getExtension(m.getType());
+		                FileOutputStream fos = new FileOutputStream(path);
+		                fw.write("IMAGE:\r\t");
+						fw.write(path);
+						fw.write("\r\n");
+		                fos.write(response);
+		                fos.close();
+		            } catch (Exception ex) {
+		                ex.printStackTrace();
+		            }
+		        }
 				fw.write("\r\n");
 				fw.flush();
 	        }catch(NullPointerException e) {
 				System.out.println("Immagine o Geolocalizzazione mancante");
 			}
-	        for (MediaEntity m : media) {
-	            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-	            String currentTime2=sdf2.format(currentDate);
-	            try {
-	                URL url = new URL(m.getMediaURL());
-	                InputStream in = new BufferedInputStream(url.openStream());
-	                ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                byte[] buf = new byte[1024];
-	                int n = 0;
-	                while (-1 != (n = in.read(buf))) {
-	                    out.write(buf, 0, n);
-	                }
-	                out.close();
-	                in.close();
-	                byte[] response = out.toByteArray();
-	                FileOutputStream fos = new FileOutputStream(file.getParent() + "\\" +currentTime2+"_"+author+"_"+m.getId() + "." + getExtension(m.getType()));
-	                fos.write(response);
-	                fos.close();
-	            } catch (Exception ex) {
-	                ex.printStackTrace();
-	            }
-	        }
 		}
 		fw.write("\r\n");
 		fw.write("\r\n");
