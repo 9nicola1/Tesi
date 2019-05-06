@@ -29,7 +29,19 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private JButton avvia;
 	private boolean normal=false;
 	private boolean advance=false;
+	private boolean stop=false;
+	private ThreadPanel threadPanel=new ThreadPanel();
+	public ViewController() {
+    	threadPanel.start();
+	}//Constructor
 
+	public void setStopFalse() {
+		this.stop=false;
+	}//setStopFalse
+	
+	public void setStopTrue() {
+		this.stop=true;
+	}//setStopTrue
 
 	@Override
 	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable, Saving saving, JButton avvia) {
@@ -82,23 +94,27 @@ public class ViewController extends Thread implements ViewControllerInteface{
 					listKey.add(listModel.getElementAt(i));
 				}
 				try {
-					Date currentDate = new Date();
-			        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			        String currentTime=sdf.format(currentDate);
-			        List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
-			        if(status.size()!=0) {
-				        for(Status s:status) {
-							Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
-									(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
-									(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
-							panelTable.dtm.addRow(obj);
-						}
-				        saving.saveStatusAndImageAndOthers(status, pathFile);
-				        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
-				    }else{
-				    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
-		
-				    }
+					while(!stop) {
+						Date currentDate = new Date();
+				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				        String currentTime=sdf.format(currentDate);
+				        List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
+				        if(status.size()!=0) {
+					        for(Status s:status) {
+								Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+										(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
+										(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
+							//	panelTable.dtm.addRow(obj);
+					        	threadPanel.update(obj, panelTable);
+							}
+					        saving.saveStatusAndImageAndOthers(status, pathFile);
+					        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
+					        Thread.sleep(10000);
+					    }else{
+					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
+			
+					    }
+					}
 				}catch(Exception e1) {
 					JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
@@ -125,7 +141,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 					long x=(long) lat;
 					long y=(long)lon;
 					int km=Integer.parseInt(area.getText());
-				//	while(true) {
+					while(!stop) {
 						Date currentDate = new Date();
 				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				        String currentTime=sdf.format(currentDate);
@@ -135,16 +151,17 @@ public class ViewController extends Thread implements ViewControllerInteface{
 								Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
 										(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
 										(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
-								panelTable.dtm.addRow(obj);
+							//	panelTable.dtm.addRow(obj);
+								threadPanel.update(obj, panelTable);
 							}
 					        saving.saveStatusAndImageAndOthers(status, pathFile);
 					        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
-					//		Thread.sleep(10000);
+							Thread.sleep(10000);
 					    }else{
 					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
 		
 					    }
-				//	}
+					}
 				}catch(Exception e1) {
 					JOptionPane.showMessageDialog(null, "Dati Errati. Inserire nuovamente","Errore", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();

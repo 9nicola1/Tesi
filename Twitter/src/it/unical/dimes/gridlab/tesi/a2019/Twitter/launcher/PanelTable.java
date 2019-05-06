@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.sun.prism.paint.Color;
@@ -33,9 +34,10 @@ public class PanelTable extends JPanel{
 	};;
 	public JTable table=new JTable(dtm);
 	public PanelTable(){
+		setBorder(new EtchedBorder(EtchedBorder.RAISED));
 		setLayout(new GridBagLayout());
 		JLabel label=new JLabel("RISULTATI RICERCA");
-		JButton button=new JButton("SVUOTA TABELLA");
+		JButton button=new JButton("SVUOTA TABELLA",new ImageIcon(getClass().getResource("trash.png")));
 		Font font = new Font("Courier", Font.BOLD,22);
 		label.setFont(font);
 		GridBagConstraints gbc = new GridBagConstraints();
