@@ -109,7 +109,7 @@ public class LauncherGui extends JFrame {
 	private DefaultListModel<String> listModel = new DefaultListModel<>();
 	private DefaultListModel<String> listModelAvanzata = new DefaultListModel<>();
 	private JMenu setting, informazioni;
-	private JMenuItem aggiornaConfigurazione, esci, help;
+	private JMenuItem aggiornaConfigurazione, esci, help,clock;
 	private JMenuBar menuBar;
 	public LauncherGui() {
 		ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
@@ -129,8 +129,10 @@ public class LauncherGui extends JFrame {
 		aggiornaConfigurazione=new JMenuItem("Configura impostazioni",new ImageIcon(getClass().getResource("setting.png")));
 		esci=new JMenuItem("Esci",new ImageIcon(getClass().getResource("close.png")));
 		help=new JMenuItem("Aiuto",new ImageIcon(getClass().getResource("help.png")));
+		clock=new JMenuItem("Tempo ricerca",new ImageIcon(getClass().getResource("clock.png")));
 		menuBar.add(setting);menuBar.add(informazioni);
 		setting.add(aggiornaConfigurazione);
+		setting.add(clock);
 		setting.add(esci);
 		informazioni.add(help);
 		esci.addActionListener(new ActionListener() {
@@ -144,8 +146,10 @@ public class LauncherGui extends JFrame {
 		help.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String info="QUAKETTER\nIl programma permette di ricercare gli stati su Twitter tramite parole chiavi.\nPer maggiori informazioni sulla ricerca avanzata "
-						+"cliccare sul logo.";
+				String info="QUAKETTER\nIl programma permette di ricercare gli stati su Twitter tramite parole chiavi.\n"
+						+ "Di default la ricerca si aggiorna ogni 15 secondi, per modificare cliccare"
+						+ "su (Impostazioni/Tempo ricerca).\n"
+						+ "Per maggiori informazioni sulla ricerca avanzata cliccare sul logo.";
 	       		JOptionPane.showMessageDialog(null, info,"Informazioni", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -153,6 +157,18 @@ public class LauncherGui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new ConfigurationPanel();
+			}
+		});
+		clock.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String x=JOptionPane.showInputDialog("Inserire il tempo di ricerca in secondi (1 secondo =1000).");
+				try {
+					int c=Integer.parseInt(x);
+					controller.setClock(c);
+				}catch(Exception e) {
+					JOptionPane.showMessageDialog(null, "Il valore inserito non è un numero!","Errore", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		giorno.setEditable(false);
@@ -393,56 +409,68 @@ public class LauncherGui extends JFrame {
 			 insertHashtag.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						if(!hashtag.getText().equals("")) {
-							listModel.addElement(hashtag.getText());
-							hashtag.setText("");	
-							removeHashtag.setEnabled(true);
-						}
-						else {
-							JOptionPane.showMessageDialog(null, "Nessun hashtag inserito","Errore", JOptionPane.ERROR_MESSAGE);
+						if(insertHashtag.isEnabled()){
+							if(!hashtag.getText().equals("")) {
+								listModel.addElement(hashtag.getText());
+								hashtag.setText("");	
+								removeHashtag.setEnabled(true);
+							}
+							else {
+								JOptionPane.showMessageDialog(null, "Nessun hashtag inserito","Errore", JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					}});
 			 stop.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						controller.setStopTrue();
-						stop.setEnabled(false);
-						search.setText("AVVIA");
-						search.setEnabled(true);
+						if(stop.isEnabled()){
+							controller.setStopTrue();
+							stop.setEnabled(false);
+							search.setText("AVVIA");
+							search.setEnabled(true);
+							check.setEnabled(true);
+						}
 					}});
 		        stopAvanzata.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						controller.setStopTrue();
-						stopAvanzata.setEnabled(false);
-						searchAvanzata.setText("AVVIA");
-						searchAvanzata.setEnabled(true);
+						if(stopAvanzata.isEnabled()){
+							controller.setStopTrue();
+							stopAvanzata.setEnabled(false);
+							searchAvanzata.setText("AVVIA");
+							searchAvanzata.setEnabled(true);
+							check.setEnabled(true);
+						}
 					}});
 		        insertHashtagAvanzata.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						if(!listHashtag.getText().equals("")) {
-							listModelAvanzata.addElement(listHashtag.getText());
-							listHashtag.setText("");	
-							removeHashtagAvanzata.setEnabled(true);
+						if(insertHashtagAvanzata.isEnabled()){
+							if(!listHashtag.getText().equals("")) {
+								listModelAvanzata.addElement(listHashtag.getText());
+								listHashtag.setText("");	
+								removeHashtagAvanzata.setEnabled(true);
+							}
+							else {
+								JOptionPane.showMessageDialog(null, "Nessun hashtag inserito","Errore", JOptionPane.ERROR_MESSAGE);
+							}
 						}
-						else {
-							JOptionPane.showMessageDialog(null, "Nessun hashtag inserito","Errore", JOptionPane.ERROR_MESSAGE);
-						}
-					}});
-
-				
+					}});				
 		        removeHashtagAvanzata.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						listModelAvanzata.removeAllElements();
-						removeHashtagAvanzata.setEnabled(false);
+						if(removeHashtagAvanzata.isEnabled()){
+							listModelAvanzata.removeAllElements();
+							removeHashtagAvanzata.setEnabled(false);
+						}
 						}});
 		        removeHashtag.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						listModel.removeAllElements();
-						removeHashtag.setEnabled(false);
+						if(removeHashtag.isEnabled()){
+							listModel.removeAllElements();
+							removeHashtag.setEnabled(false);
+						}
 						}});
 				label.addMouseListener(new MouseAdapter() {
 			       	@Override
@@ -453,113 +481,147 @@ public class LauncherGui extends JFrame {
 				check.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						if(check.isSelected()) {
-							giorno.setEditable(true);
-							latitudine.setEditable(true);
-							longitudine.setEditable(true);
-							area.setEditable(true);
-							listHashtag.setEditable(true);
-							insertHashtagAvanzata.setEnabled(true);
-							hashtag.setEditable(false);
-							buttonFileAvanzata.setEnabled(true);
-							buttonFile.setEnabled(false);
-						//	removeHashtagAvanzata.setEnabled(true);
-							search.setEnabled(false);
-							searchAvanzata.setEnabled(true);
-							insertHashtag.setEnabled(false);
-							removeHashtag.setEnabled(false);
-							if(listModelAvanzata.isEmpty())
-								removeHashtagAvanzata.setEnabled(false);
-							else
-								removeHashtagAvanzata.setEnabled(true);
-						}
-						else if(!check.isSelected()) {
-							giorno.setText("yyyy_mm_dd");
-							latitudine.setText("Es. 39.3099931");
-							longitudine.setText("Es. 16.2501929");
-							area.setText("Area in miglia");
-							hashtag.setEditable(true);
-							giorno.setEditable(false);
-							latitudine.setEditable(false);
-							longitudine.setEditable(false);
-							area.setEditable(false);
-							listHashtag.setEditable(false);
-							insertHashtagAvanzata.setEnabled(false);
-							buttonFileAvanzata.setEnabled(false);
-							buttonFile.setEnabled(true);
-							removeHashtagAvanzata.setEnabled(false);
-							search.setEnabled(true);
-							searchAvanzata.setEnabled(false);
-							insertHashtag.setEnabled(true);
-						//	removeHashtag.setEnabled(true);
-							if(listModel.isEmpty())
+						if(check.isEnabled()) {
+							if(check.isSelected()) {
+								giorno.setEditable(true);
+								latitudine.setEditable(true);
+								longitudine.setEditable(true);
+								area.setEditable(true);
+								listHashtag.setEditable(true);
+								insertHashtagAvanzata.setEnabled(true);
+								hashtag.setEditable(false);
+								buttonFileAvanzata.setEnabled(true);
+								buttonFile.setEnabled(false);
+							//	removeHashtagAvanzata.setEnabled(true);
+								search.setEnabled(false);
+								searchAvanzata.setEnabled(true);
+								insertHashtag.setEnabled(false);
 								removeHashtag.setEnabled(false);
-							else
-								removeHashtag.setEnabled(true);
+								if(listModelAvanzata.isEmpty())
+									removeHashtagAvanzata.setEnabled(false);
+								else
+									removeHashtagAvanzata.setEnabled(true);
+							}
+							else if(!check.isSelected()) {
+								giorno.setText("yyyy_mm_dd");
+								latitudine.setText("Es. 39.3099931");
+								longitudine.setText("Es. 16.2501929");
+								area.setText("Area in miglia");
+								hashtag.setEditable(true);
+								giorno.setEditable(false);
+								latitudine.setEditable(false);
+								longitudine.setEditable(false);
+								area.setEditable(false);
+								listHashtag.setEditable(false);
+								insertHashtagAvanzata.setEnabled(false);
+								buttonFileAvanzata.setEnabled(false);
+								buttonFile.setEnabled(true);
+								removeHashtagAvanzata.setEnabled(false);
+								search.setEnabled(true);
+								searchAvanzata.setEnabled(false);
+								insertHashtag.setEnabled(true);
+							//	removeHashtag.setEnabled(true);
+								if(listModel.isEmpty())
+									removeHashtag.setEnabled(false);
+								else
+									removeHashtag.setEnabled(true);
+							}
 						}
 					}});
 				hashtag.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						hashtag.setText("");						
+						if(hashtag.isEnabled()) {
+							hashtag.setText("");	
+						}
 					}});
 				latitudine.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						latitudine.setText("");						
+						if(latitudine.isEnabled())
+							latitudine.setText("");						
 					}});
 				longitudine.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						longitudine.setText("");						
+						if(longitudine.isEnabled())
+							longitudine.setText("");						
 					}});
 				area.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						area.setText("");						
+						if(area.isEnabled())
+							area.setText("");						
 					}});
 				giorno.addMouseListener(new MouseAdapter(){
 					@Override
 					public void mouseClicked(MouseEvent e){
-						giorno.setText("");						
+						if(giorno.isEnabled())
+							giorno.setText("");						
 					}});
 				buttonFile.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						JFileChooser fileChooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-						int returnValue = fileChooser.showOpenDialog(null);
-						if (returnValue == JFileChooser.APPROVE_OPTION) {
-							File selectedFile = fileChooser.getSelectedFile();
-							pathFile=selectedFile.getPath();
-							pathFileLabel.setText(pathFile);
+						if(buttonFile.isEnabled()) {
+							JFileChooser fileChooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+							int returnValue = fileChooser.showOpenDialog(null);
+							if (returnValue == JFileChooser.APPROVE_OPTION) {
+								File selectedFile = fileChooser.getSelectedFile();
+								pathFile=selectedFile.getPath();
+								pathFileLabel.setText(pathFile);
+							}
 						}
 					}
 				});
 				buttonFileAvanzata.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						JFileChooser fileChooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-						int returnValue = fileChooser.showOpenDialog(null);
-						if (returnValue == JFileChooser.APPROVE_OPTION) {
-							File selectedFile = fileChooser.getSelectedFile();
-							pathFileAvanzata=selectedFile.getPath();
-							pathFileLabelAvanzata.setText(pathFileAvanzata);
+						if(buttonFileAvanzata.isEnabled()) {
+							JFileChooser fileChooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+							int returnValue = fileChooser.showOpenDialog(null);
+							if (returnValue == JFileChooser.APPROVE_OPTION) {
+								File selectedFile = fileChooser.getSelectedFile();
+								pathFileAvanzata=selectedFile.getPath();
+								pathFileLabelAvanzata.setText(pathFileAvanzata);
+							}
 						}
 					}
 				});
 				search.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						controller.setStopFalse();
-						stop.setEnabled(true);
-						controller.normalSearch(searching, listModel, pathFile, panelTable, saving, search);
+						if(search.isEnabled()) {
+							if(listModel.size()==0) {
+								JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
+							}
+							else if(pathFile.equals("")) {
+								JOptionPane.showMessageDialog(null, "Nessun file selezionato su cui salvare.","Attenzione", JOptionPane.INFORMATION_MESSAGE);
+							}
+							else {
+								controller.setStopFalse();
+								stop.setEnabled(true);
+								check.setEnabled(false);
+								controller.normalSearch(searching, listModel, pathFile, panelTable, saving, search);
+							}
+						}
 					}});
 				searchAvanzata.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						controller.setStopFalse();
-						stopAvanzata.setEnabled(true);
-						controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable, saving, searchAvanzata);
+						if(searchAvanzata.isEnabled()) {
+							if(listModelAvanzata.size()==0) {
+								JOptionPane.showMessageDialog(null, "Nessuna parola chiave inserita. Ripetere","Errore", JOptionPane.ERROR_MESSAGE);
+							}
+							else if(pathFileAvanzata.equals("")) {
+								JOptionPane.showMessageDialog(null, "Nessun file selezionato su cui salvare.","Attenzione", JOptionPane.INFORMATION_MESSAGE);
+							}
+							else {
+								controller.setStopFalse();
+								stopAvanzata.setEnabled(true);
+								check.setEnabled(false);
+								controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable, saving, searchAvanzata);
+							}
+						}
 					}});
 		}//listener
  

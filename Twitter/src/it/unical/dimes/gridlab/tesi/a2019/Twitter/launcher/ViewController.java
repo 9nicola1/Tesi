@@ -27,10 +27,12 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private PanelTable panelTable;
 	private Saving saving;
 	private JButton avvia;
+	private int clock=15000;
 	private boolean normal=false;
 	private boolean advance=false;
 	private boolean stop=false;
 	private ThreadPanel threadPanel=new ThreadPanel();
+	
 	public ViewController() {
     	threadPanel.start();
 	}//Constructor
@@ -42,6 +44,10 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	public void setStopTrue() {
 		this.stop=true;
 	}//setStopTrue
+	
+	public void setClock(int clock) {
+		this.clock=clock;
+	}//setClock
 
 	@Override
 	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable, Saving saving, JButton avvia) {
@@ -109,7 +115,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 							}
 					        saving.saveStatusAndImageAndOthers(status, pathFile);
 					        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
-					        Thread.sleep(10000);
+					        Thread.sleep(clock);
 					    }else{
 					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
 			
@@ -156,7 +162,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 							}
 					        saving.saveStatusAndImageAndOthers(status, pathFile);
 					        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
-							Thread.sleep(10000);
+							Thread.sleep(clock);
 					    }else{
 					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
 		
