@@ -1,5 +1,6 @@
 package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -16,9 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.sun.prism.paint.Color;
 
 import javafx.scene.layout.Border;
 
@@ -34,11 +35,13 @@ public class PanelTable extends JPanel{
 	};;
 	public JTable table=new JTable(dtm);
 	public PanelTable(){
-		setBorder(new EtchedBorder(EtchedBorder.RAISED));
+		setBorder(new LineBorder(Color.DARK_GRAY,2));
 		setLayout(new GridBagLayout());
+		setBackground(new Color(95,95,95));
 		JLabel label=new JLabel("RISULTATI RICERCA");
 		JButton button=new JButton("SVUOTA TABELLA",new ImageIcon(getClass().getResource("trash.png")));
 		Font font = new Font("Courier", Font.BOLD,22);
+		label.setForeground(Color.WHITE);
 		label.setFont(font);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;

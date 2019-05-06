@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.awt.Color;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -60,7 +62,6 @@ import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.SavingAbstract;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.SearchingAbstract;
-import javafx.scene.paint.Color;
 import jdk.nashorn.tools.Shell;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -120,7 +121,18 @@ public class LauncherGui extends JFrame {
 		setLocation(200,10);
 	//	setResizable(false);
 		setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
-		add(new InitialPanel());
+		giorno.setEditable(false);
+		latitudine.setEditable(false);
+		longitudine.setEditable(false);
+		area.setEditable(false);
+		listHashtag.setEditable(false);
+		insertHashtagAvanzata.setEnabled(false);
+		buttonFileAvanzata.setEnabled(false);
+		removeHashtagAvanzata.setEnabled(false);
+		searchAvanzata.setEnabled(false);
+		removeHashtag.setEnabled(false);
+		stop.setEnabled(false);
+		stopAvanzata.setEnabled(false);
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
 		menuBar=new JMenuBar();
 		this.setJMenuBar(menuBar);
@@ -171,18 +183,9 @@ public class LauncherGui extends JFrame {
 				}
 			}
 		});
-		giorno.setEditable(false);
-		latitudine.setEditable(false);
-		longitudine.setEditable(false);
-		area.setEditable(false);
-		listHashtag.setEditable(false);
-		insertHashtagAvanzata.setEnabled(false);
-		buttonFileAvanzata.setEnabled(false);
-		removeHashtagAvanzata.setEnabled(false);
-		searchAvanzata.setEnabled(false);
-		removeHashtag.setEnabled(false);
-		stop.setEnabled(false);
-		stopAvanzata.setEnabled(false);
+		add(new InitialPanel());
+		repaint();
+		setVisible(true);
 	}//Constructor
 	
 	class ConfigurationPanel extends JFrame{
@@ -201,7 +204,6 @@ public class LauncherGui extends JFrame {
 			setSize(400,200);
 			setLocation(700,400);
 			setTitle("Configurazione Impostazioni");
-			setVisible(true);
 		//	setResizable(false);
 			setLayout(new GridBagLayout());
 			GridBagConstraints gbc = new GridBagConstraints();
@@ -250,6 +252,8 @@ public class LauncherGui extends JFrame {
 					}
 				}
 			});
+			repaint();
+			setVisible(true);
 		}//Constructor
 		public void paint(Graphics g){
 			super.paint(g);
@@ -266,6 +270,7 @@ public class LauncherGui extends JFrame {
 		private String url="icon2.png";
 		private ImageIcon icone=new ImageIcon(getClass().getResource(url));
 		private JLabel label=new JLabel(icone, JLabel.CENTER);
+		private	JLabel normalLabel=new JLabel("RICERCA STANDARD");
 		private final JList<String> listKey =new JList<String>(listModel);
 		private JScrollPane scrollPane=new JScrollPane(listKey);
 		private final String info="GIORNO: yyyy/mm/dd\nLATITUDINE: Es. 39.3099931\nLONGITUDINE: Es. 16.2501929\nAREA: Area in Miglia";
@@ -273,15 +278,34 @@ public class LauncherGui extends JFrame {
 		
 		public InitialPanel() {
 			listener();
+			check.setBackground(Color.DARK_GRAY);
+			pathFileLabel.setForeground(Color.WHITE);
+			search.setForeground(new Color(29, 202, 255));
+			searchAvanzata.setForeground(new Color(29, 202, 255));
+			hashtagLabel.setForeground(Color.WHITE);
+			giornoLabel.setForeground(Color.WHITE);
+			areaLabel.setForeground(Color.WHITE);
+			latitudineLabel.setForeground(Color.WHITE);
+			longitudineLabel.setForeground(Color.WHITE);
+			labelAvanzata.setForeground(Color.WHITE);
+			listHashtagLabel.setForeground(Color.WHITE);
+			pathFileLabelAvanzata.setForeground(Color.WHITE);
 			panelContainer.setLayout(new GridLayout(1,2));
 			setLayout(new GridLayout(1,2));
 			normalResearch.setLayout(new GridBagLayout());
-			normalResearch.setBorder(new EtchedBorder(EtchedBorder.RAISED));
-			advanceResearch.setBorder(new EtchedBorder(EtchedBorder.RAISED));
-			JLabel normalLabel=new JLabel("RICERCA STANDARD");
+			containerDati.setBackground(new Color(95,95,95));
+			normalResearch.setBorder(new LineBorder(Color.WHITE, 1));
+			advanceResearch.setBorder(new LineBorder(Color.WHITE, 1));
+			normalResearch.setBackground(Color.DARK_GRAY);
+			advanceResearch.setBackground(Color.DARK_GRAY);
+			normalLabel.setForeground(Color.WHITE);
 			Font font = new Font("Courier", Font.BOLD,22);
+			Font font2 = new Font("Courier", Font.ITALIC,12);
+			pathFileLabel.setFont(font2);
+			pathFileLabelAvanzata.setFont(font2);
 			normalLabel.setFont(font);
 			checkLabel.setFont(font);
+			checkLabel.setForeground(Color.WHITE);
 			GridBagConstraints gbcNR = new GridBagConstraints();
 			gbcNR.fill = GridBagConstraints.HORIZONTAL;
 	        gbcNR.gridx = 0;
@@ -403,6 +427,8 @@ public class LauncherGui extends JFrame {
 			add(panelContainer);
 			panelContainer.add(containerDati);
 			panelContainer.add(panelTable);
+			repaint();
+			setVisible(true);
 		}//Constructor
 		
 		private void listener() {

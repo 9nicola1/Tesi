@@ -118,6 +118,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 					        Thread.sleep(clock);
 					    }else{
 					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
+					    	stop=true;
 			
 					    }
 					}
@@ -165,7 +166,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 							Thread.sleep(clock);
 					    }else{
 					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
-		
+					    	stop=true;
 					    }
 					}
 				}catch(Exception e1) {
