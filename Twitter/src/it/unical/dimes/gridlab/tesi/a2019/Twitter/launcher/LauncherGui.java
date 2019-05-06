@@ -118,7 +118,7 @@ public class LauncherGui extends JFrame {
 		setTitle("Quaketter");
 		setVisible(true);
 		setLocation(200,10);
-		setResizable(false);
+	//	setResizable(false);
 		setDefaultCloseOperation(this.DO_NOTHING_ON_CLOSE);
 		add(new InitialPanel());
 		searching=new Searching(APIKey, APISecret, AccessToken, AccessTokenSecret);
@@ -376,6 +376,7 @@ public class LauncherGui extends JFrame {
 		    gbcAR.gridy = 11;
 		    gbcAR.fill = GridBagConstraints.HORIZONTAL;
 	        gbcAR.gridwidth = 2;
+	        advanceResearch.add(stopAvanzata, gbcAR);
 			containerDati.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 			containerTable.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 			containerTable.add(panelTable, BorderLayout.NORTH);
@@ -429,7 +430,7 @@ public class LauncherGui extends JFrame {
 							JOptionPane.showMessageDialog(null, "Nessun hashtag inserito","Errore", JOptionPane.ERROR_MESSAGE);
 						}
 					}});
-		        advanceResearch.add(stopAvanzata, gbcAR);
+
 				
 		        removeHashtagAvanzata.addMouseListener(new MouseAdapter(){
 					@Override
