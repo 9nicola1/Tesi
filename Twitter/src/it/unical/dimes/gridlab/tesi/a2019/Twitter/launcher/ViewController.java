@@ -2,6 +2,7 @@ package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private boolean normal=false;
 	private boolean advance=false;
 	private boolean stop=false;
+	private HashSet<Status>statusSaved=new HashSet<Status>();
 	private ThreadPanel threadPanel=new ThreadPanel();
 	
 	public ViewController() {
@@ -105,16 +107,27 @@ public class ViewController extends Thread implements ViewControllerInteface{
 				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				        String currentTime=sdf.format(currentDate);
 				        List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
+				        List<Status>tmp=new LinkedList<Status>();
+				        for(Status s:status) {
+				        	if(!statusSaved.contains(s)) {
+				        		statusSaved.add(s);
+				        		tmp.add(s);
+				        	}
+				        }
 				        if(status.size()!=0) {
-					        for(Status s:status) {
-								Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
-										(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
-										(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
-							//	panelTable.dtm.addRow(obj);
-					        	threadPanel.update(obj, panelTable);
-							}
-					        saving.saveStatusAndImageAndOthers(status, pathFile);
-					        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
+				        	if(tmp.size()!=0) {
+						        for(Status s:tmp) {
+									Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+											(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
+											(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
+								//	panelTable.dtm.addRow(obj);
+						        	threadPanel.update(obj, panelTable);
+								}
+				        	}
+					        if(tmp.size()!=0) {
+						        saving.saveStatusAndImageAndOthers(tmp, pathFile);
+						        saving.saveListOnTXT(tmp, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
+					        }
 					        Thread.sleep(clock);
 					    }else{
 					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
@@ -153,17 +166,29 @@ public class ViewController extends Thread implements ViewControllerInteface{
 				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				        String currentTime=sdf.format(currentDate);
 				        List<Status>status=searching.getTweetFromListHashtag(listKey, 100, x, y, km, data.getText());
+				        List<Status>tmp=new LinkedList<Status>();
+				        for(Status s:status) {
+				        	if(!statusSaved.contains(s)) {
+				        		statusSaved.add(s);
+				        		tmp.add(s);
+				        	}
+				        }
 				        if(status.size()!=0) {
-					        for(Status s:status) {
-								Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
-										(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
-										(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
-							//	panelTable.dtm.addRow(obj);
-								threadPanel.update(obj, panelTable);
-							}
-					        saving.saveStatusAndImageAndOthers(status, pathFile);
-					        saving.saveListOnTXT(status, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
-							Thread.sleep(clock);
+				        	if(tmp.size()!=0) {
+						        for(Status s:tmp) {
+									Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+											(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
+											(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
+								//	panelTable.dtm.addRow(obj);
+									threadPanel.update(obj, panelTable);
+								}
+					        }
+					        if(tmp.size()!=0) {
+						        saving.saveStatusAndImageAndOthers(tmp, pathFile);
+						        saving.saveListOnTXT(tmp, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
+					        }
+					        Thread.sleep(clock);
+					        
 					    }else{
 					    	JOptionPane.showMessageDialog(null, "La ricerca non ha prodotto alcun risultato","Nessuno Stato", JOptionPane.INFORMATION_MESSAGE);
 					    	stop=true;
