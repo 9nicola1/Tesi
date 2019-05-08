@@ -277,12 +277,18 @@ public class LauncherGui2 extends JFrame {
 		private JScrollPane scrollPane=new JScrollPane(listKey);
 		private final String info="GIORNO: yyyy/mm/dd\nLATITUDINE: Es. 39.3099931\nLONGITUDINE: Es. 16.2501929\nAREA: Area in Miglia";
 		private JLabel labelAvanzata=new JLabel(new ImageIcon(getClass().getResource("ricercaAvanzata.png")));
+		private Font font = new Font("Courier", Font.BOLD,22);
+		private Font font2 = new Font("Courier", Font.ITALIC,12);
+		private Font font3 = new Font("Courier", Font.BOLD,14);
+		private Font font4 = new Font("Courier", Font.BOLD,11);
 		
 		public InitialPanel() {
 			listener();
 		//	normalLabel.setBorder(new LineBorder(Color.WHITE, 1));
 		//	labelAvanzata.setBorder(new LineBorder(Color.WHITE, 1));
 			check.setBackground(Color.DARK_GRAY);
+			listKey.setForeground(new Color(0,126,222));
+			listKey.setFont(font4);
 			pathFileLabel.setForeground(Color.WHITE);
 			search.setForeground(new Color(29, 202, 255));
 			searchAvanzata.setForeground(new Color(29, 202, 255));
@@ -303,9 +309,7 @@ public class LauncherGui2 extends JFrame {
 			normalResearch.setBackground(Color.DARK_GRAY);
 			advanceResearch.setBackground(Color.DARK_GRAY);
 			normalLabel.setForeground(Color.WHITE);
-			Font font = new Font("Courier", Font.BOLD,22);
-			Font font2 = new Font("Courier", Font.ITALIC,12);
-			Font font3 = new Font("Courier", Font.BOLD,14);
+
 			
 			search.setFont(font2);
 			search.setBackground(new Color(20,20,20));
@@ -443,6 +447,8 @@ public class LauncherGui2 extends JFrame {
 	        gbcAR.gridy = 6;
 	        advanceResearch.add(insertHashtagAvanzata, gbcAR);
 	        final JList<String> listKeyAvanzata =new JList<String>(listModelAvanzata);
+	        listKeyAvanzata.setForeground(new Color(0,126,222));
+	        listKeyAvanzata.setFont(font4);
 			JScrollPane scrollPaneAvanzata=new JScrollPane(listKeyAvanzata);
 			scrollPaneAvanzata.setPreferredSize(new Dimension(50,50));
 	        gbcAR.gridx = 0;
