@@ -77,19 +77,19 @@ public class LauncherGui2 extends JFrame {
 	private static Saving saving=new Saving();
 	private ViewController controller=new ViewController();
 	private JTextField hashtag=new JTextField("");
-	private JTextField longitudine=new JTextField("Es. 16.2501929");
-	private JTextField latitudine=new JTextField("Es. 39.3099931");
-	private JTextField area=new JTextField("Area in miglia");
-	private JTextField giorno=new JTextField("yyyy/mm/dd");
+	private JTextField longitudine=new JTextField("");
+	private JTextField latitudine=new JTextField("");
+	private JTextField area=new JTextField("");
+	private JTextField giorno=new JTextField("");
 	private JTextField listHashtag=new JTextField(12);
 	private JLabel hashtagLabel=new JLabel(" ");
 	private JLabel checkLabel=new JLabel("Ricerca avanzata");
-	private JLabel latitudineLabel=new JLabel("                 Latitudine");
-	private JLabel longitudineLabel=new JLabel("                 Longitudine");
-	private JLabel areaLabel=new JLabel("                 Area");
+	private JLabel latitudineLabel=new JLabel("                 Latitudine    (Es. 39.3099931)");
+	private JLabel longitudineLabel=new JLabel("                 Longitudine   (Es. 16.2501929)");
+	private JLabel areaLabel=new JLabel("                 Area               (in miglia)");
 	private JLabel pathFileLabel=new JLabel("Nessun file scelto");
 	private JLabel pathFileLabelAvanzata=new JLabel("Nessun file scelto");
-	private JLabel giornoLabel=new JLabel("                 Giorno");
+	private JLabel giornoLabel=new JLabel("                 Giorno            (yyyy/mm/dd)");
 	private JLabel listHashtagLabel=new JLabel(" ");
 	private JButton buttonFile=new JButton("",new ImageIcon(getClass().getResource("seleziona.png")));
 	private JButton buttonFileAvanzata=new JButton("",new ImageIcon(getClass().getResource("seleziona.png")));
@@ -435,7 +435,7 @@ public class LauncherGui2 extends JFrame {
 	        advanceResearch.add(area, gbcAR);
 	        gbcAR.gridx = 0;
 	        gbcAR.gridy = 5;
-	        advanceResearch.add(listHashtagLabel, gbcAR);
+	   //     advanceResearch.add(listHashtagLabel, gbcAR);
 	        gbcAR.gridx = 0;
 	        gbcAR.gridy = 6;
 	        advanceResearch.add(listHashtag, gbcAR);
@@ -458,10 +458,10 @@ public class LauncherGui2 extends JFrame {
 		    gbcAR.gridy = 8;
 	        advanceResearch.add(pathFileLabelAvanzata, gbcAR);
 			gbcAR.gridx = 0;
-		    gbcAR.gridy = 10;
+		    gbcAR.gridy = 9;
 	        advanceResearch.add(searchAvanzata, gbcAR);
 			gbcAR.gridx = 1;
-		    gbcAR.gridy = 10;
+		    gbcAR.gridy = 9;
 	        advanceResearch.add(stopAvanzata, gbcAR);
 			containerDati.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 			containerTable.setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -575,10 +575,10 @@ public class LauncherGui2 extends JFrame {
 									removeHashtagAvanzata.setEnabled(true);
 							}
 							else if(!check.isSelected()) {
-								giorno.setText("yyyy_mm_dd");
-								latitudine.setText("Es. 39.3099931");
-								longitudine.setText("Es. 16.2501929");
-								area.setText("Area in miglia");
+						//		giorno.setText("");
+						//		latitudine.setText("");
+						//		longitudine.setText("");
+						//		area.setText("");
 								hashtag.setEditable(true);
 								giorno.setEditable(false);
 								latitudine.setEditable(false);
@@ -654,6 +654,10 @@ public class LauncherGui2 extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						if(buttonFileAvanzata.isEnabled()) {
 							JFileChooser fileChooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+							fileChooser.setDialogTitle("Seleziona un file");
+							fileChooser.setAcceptAllFileFilterUsed(false);
+							FileNameExtensionFilter filter = new FileNameExtensionFilter("Tutti i file di tipo (*.xls)", "xls");
+							fileChooser.addChoosableFileFilter(filter);
 							int returnValue = fileChooser.showOpenDialog(null);
 							if (returnValue == JFileChooser.APPROVE_OPTION) {
 								File selectedFile = fileChooser.getSelectedFile();

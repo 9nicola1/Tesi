@@ -185,7 +185,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 								}
 					        }
 					        if(tmp.size()!=0) {
-						        saving.saveStatusAndImageAndOthers(tmp, pathFile);
+						        saving.saveListOnCSV(tmp, pathFile);
 						        saving.saveListOnTXT(tmp, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
 					        }
 					        Thread.sleep(clock);
