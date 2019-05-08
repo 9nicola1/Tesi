@@ -38,9 +38,10 @@ public class PanelTable extends JPanel{
 		setBorder(new LineBorder(Color.DARK_GRAY,2));
 		setLayout(new GridBagLayout());
 		setBackground(new Color(95,95,95));
-		JLabel label=new JLabel("RISULTATI RICERCA");
-		JButton button=new JButton("SVUOTA TABELLA",new ImageIcon(getClass().getResource("trash.png")));
+		JLabel label=new JLabel(new ImageIcon(getClass().getResource("risultatiRicerca.png")));
+		JButton button=new JButton("",new ImageIcon(getClass().getResource("svuotaTabella.png")));
 		Font font = new Font("Courier", Font.BOLD,22);
+		label.setBorder(new LineBorder(Color.WHITE, 1));
 		label.setForeground(Color.WHITE);
 		label.setFont(font);
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -63,6 +64,9 @@ public class PanelTable extends JPanel{
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 	    gbc.gridwidth = 2;
 		add(button, gbc);
+		button.setBorderPainted(false);
+		button.setFocusPainted(false);
+		button.setContentAreaFilled(false);
         button.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mouseClicked(MouseEvent e){

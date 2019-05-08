@@ -141,7 +141,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 					e1.printStackTrace();
 				}	
 			}
-			avvia.setText("AVVIA");
+			avvia.setText(""); //Da settare ad "AVVIA" con vecchia grafica
 			avvia.setEnabled(true);
 		}else if(advance) {
 			avvia.setText("Ricerca in corso...");
@@ -200,7 +200,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 					e1.printStackTrace();
 				}	
 			}
-			avvia.setText("AVVIA");
+			avvia.setText(""); //Da settare ad "AVVIA" con vecchia grafica
 			avvia.setEnabled(true);
 		}
 	}//run

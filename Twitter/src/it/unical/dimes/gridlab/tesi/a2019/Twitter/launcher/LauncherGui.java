@@ -52,6 +52,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 import org.omg.CORBA.portable.InputStream;
@@ -204,7 +205,8 @@ public class LauncherGui extends JFrame {
 			setSize(400,200);
 			setLocation(700,400);
 			setTitle("Configurazione Impostazioni");
-		//	setResizable(false);
+			setResizable(false);
+			setVisible(true);
 			setLayout(new GridBagLayout());
 			GridBagConstraints gbc = new GridBagConstraints();
 	        gbc.gridx = 0;
@@ -252,9 +254,8 @@ public class LauncherGui extends JFrame {
 					}
 				}
 			});
-			repaint();
-			setVisible(true);
 		}//Constructor
+		
 		public void paint(Graphics g){
 			super.paint(g);
 			ImageIcon image=new ImageIcon(getClass().getResource("background.jpg"));
@@ -301,6 +302,16 @@ public class LauncherGui extends JFrame {
 			normalLabel.setForeground(Color.WHITE);
 			Font font = new Font("Courier", Font.BOLD,22);
 			Font font2 = new Font("Courier", Font.ITALIC,12);
+			
+			search.setFont(font2);
+			search.setBackground(new Color(20,20,20));
+			search.setForeground(Color.WHITE);
+			search.setBorder(new LineBorder(Color.WHITE, 3));
+			
+			search.setBorderPainted(false);
+			search.setFocusPainted(false);
+			search.setContentAreaFilled(false);
+			
 			pathFileLabel.setFont(font2);
 			pathFileLabelAvanzata.setFont(font2);
 			normalLabel.setFont(font);
@@ -590,6 +601,10 @@ public class LauncherGui extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						if(buttonFile.isEnabled()) {
 							JFileChooser fileChooser=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+							fileChooser.setDialogTitle("Seleziona un file");
+							fileChooser.setAcceptAllFileFilterUsed(false);
+							FileNameExtensionFilter filter = new FileNameExtensionFilter("Tutti i file di tipo (*.xls)", "xls");
+							fileChooser.addChoosableFileFilter(filter);
 							int returnValue = fileChooser.showOpenDialog(null);
 							if (returnValue == JFileChooser.APPROVE_OPTION) {
 								File selectedFile = fileChooser.getSelectedFile();

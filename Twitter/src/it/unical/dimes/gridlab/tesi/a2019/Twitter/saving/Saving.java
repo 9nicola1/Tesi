@@ -122,22 +122,12 @@ public class Saving extends SavingAbstract{
 		}
 		wworkbook.write();
         wworkbook.close();
-	}//saveList
+	}//saveListOnCSV
 
 	@Override
 	public List<String> readFile(File file) {
-		List<String>list=new LinkedList<String>();
-		try {
-			Scanner inputStream=new Scanner(file);
-			while(inputStream.hasNext()) {
-				String data=inputStream.nextLine();
-				list.add(data);
-			}
-			inputStream.close();
-		}catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return list;
+		//TODO
+		return null;
 	}//readFile
 
 	@Override
@@ -178,9 +168,8 @@ public class Saving extends SavingAbstract{
 		for(Status s: list) {
 			String author=s.getUser().getScreenName();
 			String status=s.getText();
-	//		URLEntity[] urls=s.getURLEntities();
 			HashtagEntity[]hashtag=s.getHashtagEntities();
-			MediaEntity[] media = s.getMediaEntities(); //get the media entities from the status
+			MediaEntity[] media = s.getMediaEntities();
 			int RT=s.getRetweetCount();
 			GeoLocation geoLocation=s.getGeoLocation();
 			Place place=s.getPlace();	
@@ -235,8 +224,7 @@ public class Saving extends SavingAbstract{
 					fw.write((double) geoLocation.getLatitude()+"\r\t"+(double)geoLocation.getLongitude());
 					fw.write("\r\n");
 				}
-				saveImageAndVideo(currentDate, media, author,file.getParent());
-			   
+				saveImageAndVideo(currentDate, media, author,file.getParent());		   
 				fw.write("\r\n");
 				fw.flush();
 	        }catch(NullPointerException e) {
@@ -291,6 +279,6 @@ public class Saving extends SavingAbstract{
         } else {
             return "err";
         }
-    }
+    }//getExtension
 
 }//Saving
