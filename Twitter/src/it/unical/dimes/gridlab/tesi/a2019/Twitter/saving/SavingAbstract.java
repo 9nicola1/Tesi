@@ -16,7 +16,8 @@ public abstract class SavingAbstract {
 	 }//Constructor
 	 
 	 /**
-	  * Memorizza su un file csv tutti gli stati presenti nella lista
+	  * Memorizza su un file csv tutti gli stati presenti nella lista nel seguente ordine:        
+	  * [Author]-[Data Pubblicazione]-[Stato]-[RT]-[Hashtag]-[Media]-[Place]-[Geolocalizzazione]-[Data Prelievo]
 	  * @param list -->Lista contenente gli stati 
 	  * @param nameFile -->Fornire il path completo del file (Es. "C:\Users\Nicola\Desktop\nameFile.csv")
 	 * @throws WriteException 

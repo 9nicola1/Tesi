@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,7 +60,6 @@ public class Saving extends SavingAbstract{
 			String author=s.getUser().getScreenName();
 			label = new Label(colonna++, riga, author);
 			wsheet.addCell(label);
-
 			//Aggiunta data pubblicazione
 			Date date=s.getCreatedAt();
 			label = new Label(colonna++, riga, date.toString());
@@ -116,7 +116,9 @@ public class Saving extends SavingAbstract{
 			else
 				colonna=colonna+2;
 			label = new Label(colonna++, riga, currentTime);
+			wsheet.addCell(label);
 			riga++;
+			saveImageAndVideo(currentDate, media, author,file.getParent());
 		}
 		wworkbook.write();
         wworkbook.close();
@@ -233,35 +235,8 @@ public class Saving extends SavingAbstract{
 					fw.write((double) geoLocation.getLatitude()+"\r\t"+(double)geoLocation.getLongitude());
 					fw.write("\r\n");
 				}
-			   for (MediaEntity m : media) {
-		            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-		            String currentTime2=sdf2.format(currentDate);
-		            try {
-		                URL url = new URL(m.getMediaURL());
-		                InputStream in = new BufferedInputStream(url.openStream());
-		                ByteArrayOutputStream out = new ByteArrayOutputStream();
-		                byte[] buf = new byte[1024];
-		                int n = 0;
-		                while (-1 != (n = in.read(buf))) {
-		                    out.write(buf, 0, n);
-		                }
-		                out.close();
-		                in.close();
-		                byte[] response = out.toByteArray();
-		                String path=file.getParent() + "\\" +currentTime2+"-"+author+"-"+m.getId() + "." + getExtension(m.getType());
-		                FileOutputStream fos = new FileOutputStream(path);
-		                fw.write("IMAGE:\r\t");
-						fw.write(path);
-						fw.write("\r\n");
-		                fos.write(response);
-		                fos.close();
-		            } catch (FileNotFoundException ex) {
-		                ex.printStackTrace();
-		                String path=file.getParent() + "\\" +currentTime2+"-"+m.hashCode() + "." + getExtension(m.getType());
-		                FileOutputStream fos = new FileOutputStream(path);
-		                System.out.println(path);
-		            }
-		        }
+				saveImageAndVideo(currentDate, media, author,file.getParent());
+			   
 				fw.write("\r\n");
 				fw.flush();
 	        }catch(NullPointerException e) {
@@ -275,6 +250,37 @@ public class Saving extends SavingAbstract{
 		fw.close();	
 	}//saveStatusAndImageAndOthers
 	
+	private void saveImageAndVideo(Date currentDate, MediaEntity[] media, String author, String pathFile) throws IOException {
+		for (MediaEntity m : media) {
+			if(m.getType().equals("photo")) {
+	            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+	            String currentTime2=sdf2.format(currentDate);
+	            try {
+	                URL url = new URL(m.getMediaURL());
+	                InputStream in = new BufferedInputStream(url.openStream());
+	                ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                byte[] buf = new byte[1024];
+	                int n = 0;
+	                while (-1 != (n = in.read(buf))) {
+	                    out.write(buf, 0, n);
+	                }
+	                out.close();
+	                in.close();
+	                byte[] response = out.toByteArray();
+	                String path=pathFile + "\\" +currentTime2+"-"+author+"-"+m.getId() + "." + getExtension(m.getType());
+	                FileOutputStream fos = new FileOutputStream(path);
+	                fos.write(response);
+	                fos.close();
+	            } catch (FileNotFoundException ex) {
+	                ex.printStackTrace();
+	                String path=pathFile + "\\" +currentTime2+"-"+m.hashCode() + "." + getExtension(m.getType());
+	                FileOutputStream fos = new FileOutputStream(path);
+	                System.out.println(path);
+	            }
+			}
+        }	
+	}//saveImageAndVideo
+
 	private String getExtension(String type) {
         if (type.equals("photo")) {
             return "jpg";
