@@ -117,15 +117,16 @@ public class ViewController extends Thread implements ViewControllerInteface{
 				        if(status.size()!=0) {
 				        	if(tmp.size()!=0) {
 						        for(Status s:tmp) {
-									Object[]obj= {currentTime,s.getUser().getName(), s.getText().toString(), 
+									Object[]obj= {currentTime,s.getUser().getScreenName(), s.getText().toString(), 
 											(s.getPlace()==null)?"":s.getPlace().getFullName(), (s.getGeoLocation()==null)?"":s.getGeoLocation().getLatitude(),
 											(s.getGeoLocation()==null)?"":s.getGeoLocation().getLongitude() };
 								//	panelTable.dtm.addRow(obj);
 						        	threadPanel.update(obj, panelTable);
 								}
 				        	}
+				        	//Se non c'è alcun tweet evita di aprire il file
 					        if(tmp.size()!=0) {
-						        saving.saveStatusAndImageAndOthers(tmp, pathFile);
+						        saving.saveListOnCSV(tmp, pathFile);
 						        saving.saveListOnTXT(tmp, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
 					        }
 					        Thread.sleep(clock);

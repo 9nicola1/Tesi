@@ -15,37 +15,111 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-import au.com.bytecode.opencsv.CSVWriter;
-import jdk.nashorn.internal.parser.JSONParser;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 import twitter4j.GeoLocation;
-import twitter4j.JSONObject;
+import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
 import twitter4j.Place;
 import twitter4j.Status;
-import twitter4j.URLEntity;
+
 
 public class Saving extends SavingAbstract{
 
 	@Override
-	public void saveListOnCSV(List<Status> list, String nameFile) throws IOException {
+	public void saveListOnCSV(List<Status> list, String nameFile) throws IOException, WriteException, BiffException {
+		File file=new File(nameFile);
+		Workbook workbook;
+		WritableWorkbook wworkbook;
 		Date currentDate = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String currentTime=sdf.format(currentDate);
-		List<String>oldList=readFile(new File(nameFile));
-		FileWriter writer=new FileWriter(nameFile);
-		if(oldList.size()!=0) {
-			for(String s:oldList) 
-				writer.append(s);
+		try {
+		 workbook=Workbook.getWorkbook(file);
+		 wworkbook= Workbook.createWorkbook(file,workbook);
+		}catch(FileNotFoundException e) {
+			wworkbook= Workbook.createWorkbook(file);
 		}
-		writer.append(currentTime);
-		writer.append('\n');
-		for(Status s:list) {
-		//	 String[]column=new String[1];
-		//	 column[0]=s.toString();
-			 writer.append(s.toString());
+		WritableSheet wsheet;
+		if(wworkbook.getNumberOfSheets()==0)
+			wsheet = wworkbook.createSheet("Dati Twitter",0);
+		else
+			wsheet = wworkbook.getSheet("Dati Twitter");
+		int tmp=wsheet.getRows();
+		int riga=0;
+		if(tmp!=0)riga=tmp+1;
+		Label label=null;
+		for(Status s: list) {
+			int colonna=0;
+			//Aggiunta Author
+			String author=s.getUser().getScreenName();
+			label = new Label(colonna++, riga, author);
+			wsheet.addCell(label);
+
+			//Aggiunta data pubblicazione
+			Date date=s.getCreatedAt();
+			label = new Label(colonna++, riga, date.toString());
+			wsheet.addCell(label);
+			//Aggiunta stato
+			String status=s.getText();
+			label = new Label(colonna++, riga, status);
+			wsheet.addCell(label);
+			//Aggiunta RT
+			int RT=s.getRetweetCount();
+			label = new Label(colonna++, riga, ""+RT);
+			wsheet.addCell(label);
+			//Aggiunta Hashtag
+			HashtagEntity[]hashtag=s.getHashtagEntities();
+			if(hashtag.length!=0) {
+				StringBuilder tag=new StringBuilder();
+				for(int i=0; i<hashtag.length; i++) {	
+					tag.append(hashtag[i].getText());
+					tag.append('\n');
+				}
+				label = new Label(colonna++, riga, tag.toString());
+				wsheet.addCell(label);
+			}
+			else
+				colonna++;
+			//Aggiunta media
+			MediaEntity[] media = s.getMediaEntities(); 
+			if(media.length!=0) {
+				StringBuilder medias=new StringBuilder();
+				for(int i=0; i<media.length; i++) {	
+					medias.append(media[i].getText());
+					medias.append('\n');
+				}
+				label = new Label(colonna++, riga, medias.toString());
+				wsheet.addCell(label);
+			}
+			else
+				colonna++;
+			//Aggiunta Posto
+			Place place=s.getPlace();
+			if(place!=null ) {
+				label = new Label(colonna++, riga, place.getFullName());
+				wsheet.addCell(label);
+			}
+			else
+				colonna++;
+			GeoLocation geoLocation=s.getGeoLocation();
+			if(geoLocation!=null) {
+				label = new Label(colonna++, riga, ""+(double) geoLocation.getLatitude());
+				wsheet.addCell(label);
+				label = new Label(colonna++, riga, ""+(double)geoLocation.getLongitude());
+				wsheet.addCell(label);
+			}
+			else
+				colonna=colonna+2;
+			label = new Label(colonna++, riga, currentTime);
+			riga++;
 		}
-		writer.flush();
-		writer.close();
+		wworkbook.write();
+        wworkbook.close();
 	}//saveList
 
 	@Override
@@ -100,9 +174,10 @@ public class Saving extends SavingAbstract{
 		fw.write("\r\n");
 		fw.write("\r\n");
 		for(Status s: list) {
-			String author=s.getUser().getName();
+			String author=s.getUser().getScreenName();
 			String status=s.getText();
 	//		URLEntity[] urls=s.getURLEntities();
+			HashtagEntity[]hashtag=s.getHashtagEntities();
 			MediaEntity[] media = s.getMediaEntities(); //get the media entities from the status
 			int RT=s.getRetweetCount();
 			GeoLocation geoLocation=s.getGeoLocation();
@@ -121,6 +196,15 @@ public class Saving extends SavingAbstract{
 				fw.write("#RT:\r\t");
 				fw.write(""+RT);
 				fw.write("\r\n");
+				if(hashtag.length!=0) {
+					fw.write("TAG:\r\t");
+					for(int i=0; i<hashtag.length; i++) {						
+						fw.write(hashtag[i].getText().toUpperCase());
+						fw.write("\r\t");
+
+					}
+					fw.write("\r\n");
+				}
 				if(media.length!=0) {
 					for(int i=0; i<media.length; i++) {
 						fw.write("URL:\r\t");
@@ -164,7 +248,7 @@ public class Saving extends SavingAbstract{
 		                out.close();
 		                in.close();
 		                byte[] response = out.toByteArray();
-		                String path=file.getParent() + "\\" +currentTime2+"_"+author+"_"+m.getId() + "." + getExtension(m.getType());
+		                String path=file.getParent() + "\\" +currentTime2+"-"+author+"-"+m.getId() + "." + getExtension(m.getType());
 		                FileOutputStream fos = new FileOutputStream(path);
 		                fw.write("IMAGE:\r\t");
 						fw.write(path);
@@ -173,7 +257,7 @@ public class Saving extends SavingAbstract{
 		                fos.close();
 		            } catch (FileNotFoundException ex) {
 		                ex.printStackTrace();
-		                String path=file.getParent() + "\\" +currentTime2+"_"+m.hashCode() + "." + getExtension(m.getType());
+		                String path=file.getParent() + "\\" +currentTime2+"-"+m.hashCode() + "." + getExtension(m.getType());
 		                FileOutputStream fos = new FileOutputStream(path);
 		                System.out.println(path);
 		            }

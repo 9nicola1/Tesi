@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import au.com.bytecode.opencsv.CSVWriter;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 import twitter4j.Status;
 
 public abstract class SavingAbstract {
@@ -17,8 +19,10 @@ public abstract class SavingAbstract {
 	  * Memorizza su un file csv tutti gli stati presenti nella lista
 	  * @param list -->Lista contenente gli stati 
 	  * @param nameFile -->Fornire il path completo del file (Es. "C:\Users\Nicola\Desktop\nameFile.csv")
+	 * @throws WriteException 
+	 * @throws BiffException 
 	  */
-	 public abstract void saveListOnCSV(List<Status>list, String nameFile)throws IOException;
+	 public abstract void saveListOnCSV(List<Status>list, String nameFile)throws IOException, WriteException, BiffException;
 	 
 	 /**
 	  * Questo metodo memorizza la lista degli stati (JSon) su un file di testo
