@@ -42,9 +42,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -54,6 +57,8 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.table.DefaultTableModel;
 import org.omg.CORBA.portable.InputStream;
 
@@ -107,6 +112,7 @@ public class LauncherGui2 extends JFrame {
 	private JPanel containerDati=new JPanel();
 	private JPanel normalResearch=new JPanel();
 	private JPanel advanceResearch=new JPanel();
+	private JTabbedPane tab=new JTabbedPane();
 	private PanelTable panelTable=new PanelTable();
 	private DefaultListModel<String> listModel = new DefaultListModel<>();
 	private DefaultListModel<String> listModelAvanzata = new DefaultListModel<>();
@@ -376,7 +382,6 @@ public class LauncherGui2 extends JFrame {
 			insertHashtagAvanzata.setContentAreaFilled(false);
 			
 			
-			
 			pathFileLabel.setFont(font2);
 			pathFileLabelAvanzata.setFont(font2);
 			normalLabel.setFont(font);
@@ -495,8 +500,30 @@ public class LauncherGui2 extends JFrame {
 			containerDati.add(advanceResearch);
 			containerDati.add(label);
 			add(panelContainer);
+			
+			//Aggiornamento con tab	
+			tab.setBackground(Color.DARK_GRAY);
+			UIManager.put("TabbedPane.selected", new Color(95,95,95));
+			UIManager.put("TabbedPane.focus ", new Color(95,95,95));			
+			UIManager.put("TabbedPane.contentAreaColor", new Color(95,95,95));
+			UIManager.put("TabbedPane.highlight", Color.WHITE);
+			UIManager.put("TabbedPane.shadow", new Color(95,95,95));
+			UIManager.put("TabbedPane.darkShadow", Color.WHITE);
+			UIManager.put("TabbedPane.borderHightlightColor", new Color(95,95,95));
+			tab.setOpaque(true);
+			tab.setUI(new BasicTabbedPaneUI());
+			
+			tab.addTab("RISULTATI", panelTable);
+
+			tab.addTab("RISULTATI3", new JLabel("CIAO"));
+			for (int i = 0; i < tab.getComponentCount(); ++i){
+			  tab.setBackgroundAt(i,Color.DARK_GRAY);
+			  tab.setForegroundAt(i, Color.WHITE); 
+			}
+			UIManager.put("TabbedPane.borderHightlightColor", new ColorUIResource( Color.RED ));
+			UIManager.put("TabbedPane.darkShadow", new ColorUIResource( Color.RED ));
 			panelContainer.add(containerDati);
-			panelContainer.add(panelTable);
+			panelContainer.add(tab);
 			repaint();
 			setVisible(true);
 		}//Constructor
