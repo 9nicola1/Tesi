@@ -83,12 +83,12 @@ public class LauncherGui2 extends JFrame {
 	private JTextField giorno=new JTextField("");
 	private JTextField listHashtag=new JTextField(12);
 	private JLabel hashtagLabel=new JLabel(" ");
-	private JLabel checkLabel=new JLabel("Ricerca avanzata");
+	private JLabel checkLabel=new JLabel("                 Ricerca avanzata");
 	private JLabel latitudineLabel=new JLabel("                 Latitudine    (Es. 39.3099931)");
 	private JLabel longitudineLabel=new JLabel("                 Longitudine   (Es. 16.2501929)");
 	private JLabel areaLabel=new JLabel("                 Area               (in miglia)");
-	private JLabel pathFileLabel=new JLabel("Nessun file scelto");
-	private JLabel pathFileLabelAvanzata=new JLabel("Nessun file scelto");
+	private JLabel pathFileLabel=new JLabel("                 Nessun file scelto");
+	private JLabel pathFileLabelAvanzata=new JLabel("                 Nessun file scelto");
 	private JLabel giornoLabel=new JLabel("                 Giorno            (yyyy/mm/dd)");
 	private JLabel listHashtagLabel=new JLabel(" ");
 	private JButton buttonFile=new JButton("",new ImageIcon(getClass().getResource("seleziona.png")));
@@ -114,7 +114,7 @@ public class LauncherGui2 extends JFrame {
 	private JMenuItem aggiornaConfigurazione, esci, help,clock;
 	private JMenuBar menuBar;
 	public LauncherGui2() {
-		ImageIcon img = new ImageIcon(getClass().getResource("icon.png"));
+		ImageIcon img = new ImageIcon(getClass().getResource("logoBiancoRosso.png"));
 		setIconImage(img.getImage());
 		setSize(1680,1020);
 		setTitle("Quaketter");
@@ -269,25 +269,54 @@ public class LauncherGui2 extends JFrame {
 	class InitialPanel extends JPanel{
 		private GridBagConstraints gbcAR = new GridBagConstraints();
 		private GridBagConstraints gbcNR = new GridBagConstraints();
-		private String url="icon2.png";
+		private String url="logoRossoBianco.png";
 		private ImageIcon icone=new ImageIcon(getClass().getResource(url));
 		private JLabel label=new JLabel(icone, JLabel.CENTER);
 		private	JLabel normalLabel=new JLabel(new ImageIcon(getClass().getResource("ricercaStandard.png")));
 		private final JList<String> listKey =new JList<String>(listModel);
+		private final JList<String> listKeyAvanzata =new JList<String>(listModelAvanzata);
 		private JScrollPane scrollPane=new JScrollPane(listKey);
+		private JScrollPane scrollPaneAvanzata=new JScrollPane(listKeyAvanzata);
 		private final String info="GIORNO: yyyy/mm/dd\nLATITUDINE: Es. 39.3099931\nLONGITUDINE: Es. 16.2501929\nAREA: Area in Miglia";
 		private JLabel labelAvanzata=new JLabel(new ImageIcon(getClass().getResource("ricercaAvanzata.png")));
 		private Font font = new Font("Courier", Font.BOLD,22);
 		private Font font2 = new Font("Courier", Font.ITALIC,12);
 		private Font font3 = new Font("Courier", Font.BOLD,14);
-		private Font font4 = new Font("Courier", Font.BOLD,11);
+		private Font font4 = new Font("Arial", Font.BOLD,12);
 		
 		public InitialPanel() {
 			listener();
-		//	normalLabel.setBorder(new LineBorder(Color.WHITE, 1));
-		//	labelAvanzata.setBorder(new LineBorder(Color.WHITE, 1));
+			normalLabel.setBorder(new LineBorder(Color.WHITE, 1));
+			labelAvanzata.setBorder(new LineBorder(Color.WHITE, 1));
+			
+			//Change color to JTextField
+			giorno.setBackground(new Color(95,95,95));
+			hashtag.setBackground(new Color(95,95,95));
+			listHashtag.setBackground(new Color(95,95,95));
+			latitudine.setBackground(new Color(95,95,95));
+			longitudine.setBackground(new Color(95,95,95));
+			area.setBackground(new Color(95,95,95));
+			scrollPane.getViewport().getView().setBackground(new Color(95,95,95));
+			scrollPaneAvanzata.getViewport().getView().setBackground(new Color(95,95,95));
+			
+			//Set Font JTextField
+			giorno.setFont(font4);
+			hashtag.setFont(font4);
+			listHashtag.setFont(font4);
+			latitudine.setFont(font4);
+			longitudine.setFont(font4);
+			area.setFont(font4);
+			
+			//Set Color JTextField
+			giorno.setForeground(Color.WHITE);
+			hashtag.setForeground(Color.WHITE);
+			listHashtag.setForeground(Color.WHITE);
+			latitudine.setForeground(Color.WHITE);
+			longitudine.setForeground(Color.WHITE);
+			area.setForeground(Color.WHITE);
+			
 			check.setBackground(Color.DARK_GRAY);
-			listKey.setForeground(new Color(0,126,222));
+			listKey.setForeground(Color.WHITE);
 			listKey.setFont(font4);
 			pathFileLabel.setForeground(Color.WHITE);
 			search.setForeground(new Color(29, 202, 255));
@@ -310,49 +339,38 @@ public class LauncherGui2 extends JFrame {
 			advanceResearch.setBackground(Color.DARK_GRAY);
 			normalLabel.setForeground(Color.WHITE);
 
-			
+			//Invisible button
 			search.setFont(font2);
 			search.setBackground(new Color(20,20,20));
 			search.setForeground(Color.WHITE);
-			search.setBorder(new LineBorder(Color.WHITE, 3));
-			
+			search.setBorder(new LineBorder(Color.WHITE, 3));		
 			search.setBorderPainted(false);
 			search.setFocusPainted(false);
 			search.setContentAreaFilled(false);
-
 			stop.setBorderPainted(false);
 			stop.setFocusPainted(false);
-			stop.setContentAreaFilled(false);
-			
+			stop.setContentAreaFilled(false);		
 			stopAvanzata.setBorderPainted(false);
 			stopAvanzata.setFocusPainted(false);
-			stopAvanzata.setContentAreaFilled(false);
-			
+			stopAvanzata.setContentAreaFilled(false);			
 			removeHashtagAvanzata.setBorderPainted(false);
 			removeHashtagAvanzata.setFocusPainted(false);
-			removeHashtagAvanzata.setContentAreaFilled(false);
-			
+			removeHashtagAvanzata.setContentAreaFilled(false);			
 			removeHashtag.setBorderPainted(false);
 			removeHashtag.setFocusPainted(false);
-			removeHashtag.setContentAreaFilled(false);
-
-			
+			removeHashtag.setContentAreaFilled(false);			
 			searchAvanzata.setBorderPainted(false);
 			searchAvanzata.setFocusPainted(false);
-			searchAvanzata.setContentAreaFilled(false);
-			
+			searchAvanzata.setContentAreaFilled(false);			
 			insertHashtag.setBorderPainted(false);
 			insertHashtag.setFocusPainted(false);
-			insertHashtag.setContentAreaFilled(false);
-			
+			insertHashtag.setContentAreaFilled(false);			
 			buttonFile.setBorderPainted(false);
 			buttonFile.setFocusPainted(false);
-			buttonFile.setContentAreaFilled(false);
-			
+			buttonFile.setContentAreaFilled(false);			
 			buttonFileAvanzata.setBorderPainted(false);
 			buttonFileAvanzata.setFocusPainted(false);
-			buttonFileAvanzata.setContentAreaFilled(false);
-			
+			buttonFileAvanzata.setContentAreaFilled(false);			
 			insertHashtagAvanzata.setBorderPainted(false);
 			insertHashtagAvanzata.setFocusPainted(false);
 			insertHashtagAvanzata.setContentAreaFilled(false);
@@ -446,10 +464,10 @@ public class LauncherGui2 extends JFrame {
 	        gbcAR.gridx = 1;
 	        gbcAR.gridy = 6;
 	        advanceResearch.add(insertHashtagAvanzata, gbcAR);
-	        final JList<String> listKeyAvanzata =new JList<String>(listModelAvanzata);
-	        listKeyAvanzata.setForeground(new Color(0,126,222));
+
+	        listKeyAvanzata.setForeground(Color.WHITE);
 	        listKeyAvanzata.setFont(font4);
-			JScrollPane scrollPaneAvanzata=new JScrollPane(listKeyAvanzata);
+			
 			scrollPaneAvanzata.setPreferredSize(new Dimension(50,50));
 	        gbcAR.gridx = 0;
 	        gbcAR.gridy = 7;
