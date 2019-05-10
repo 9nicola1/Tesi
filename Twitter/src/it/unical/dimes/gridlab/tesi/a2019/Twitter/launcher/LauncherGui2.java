@@ -68,6 +68,7 @@ import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.SavingAbstract;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.SearchingAbstract;
+import javafx.embed.swing.JFXPanel;
 import jdk.nashorn.tools.Shell;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -514,8 +515,8 @@ public class LauncherGui2 extends JFrame {
 			tab.setUI(new BasicTabbedPaneUI());
 			
 			tab.addTab("RISULTATI", panelTable);
-
-			tab.addTab("RISULTATI3", new JLabel("CIAO"));
+			JButton bu=new JButton("GRafico");
+			tab.addTab("ANALISI",bu);
 			for (int i = 0; i < tab.getComponentCount(); ++i){
 			  tab.setBackgroundAt(i,Color.DARK_GRAY);
 			  tab.setForegroundAt(i, Color.WHITE); 
