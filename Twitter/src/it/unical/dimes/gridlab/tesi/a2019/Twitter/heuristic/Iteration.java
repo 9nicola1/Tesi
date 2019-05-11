@@ -19,6 +19,22 @@ public class Iteration {
 		this.threshold=threshold;
 	}//Constructor
 	
+	public LinkedList<String> getAllertHashtag() {
+		return allertHashtag;
+	}
+
+	public void setAllertHashtag(LinkedList<String> allertHashtag) {
+		this.allertHashtag = allertHashtag;
+	}
+
+	public LinkedList<Location> getAllertLocation() {
+		return allertLocation;
+	}
+
+	public void setAllertLocation(LinkedList<Location> allertLocation) {
+		this.allertLocation = allertLocation;
+	}
+
 	/**
 	 * Nel momento in cui c'è stato un allert si può invocare il metodo per ottenere gli stati
 	 * Se una delle due liste è vuota mettere null come parametro.
@@ -104,16 +120,16 @@ public class Iteration {
 			for(HashtagEntity h:hashtag) {
 				if(h!=null) {
 					try {
-						if(hashtagNumber.containsKey(h.getText())) {
-							int number=hashtagNumber.get(h.getText());
-							hashtagNumber.remove(h.getText());
+						if(hashtagNumber.containsKey(h.getText().toUpperCase())) {
+							int number=hashtagNumber.get(h.getText().toUpperCase());
+							hashtagNumber.remove(h.getText().toUpperCase());
 							number++;
-							hashtagNumber.put(h.getText(), number);
+							hashtagNumber.put(h.getText().toUpperCase(), number);
 						}
 						else
-							hashtagNumber.put(h.getText(), 1);
+							hashtagNumber.put(h.getText().toUpperCase(), 1);
 					}catch(NullPointerException e) {
-							hashtagNumber.put(h.getText(), 1);
+							hashtagNumber.put(h.getText().toUpperCase(), 1);
 					}
 				}
 			}
@@ -169,14 +185,33 @@ public class Iteration {
 		this.geoLocationNumber = geoLocationNumber;
 	}//setGeoLocationNumber
 	
-	public HashMap<String, Integer> getHashtagNumber() {
-		return hashtagNumber;
+	public TreeMap<String, Integer> getHashtagNumber() {
+		String[] keys = hashtagNumber.keySet().toArray(new String[0]);
+		Arrays.sort(keys, new MapValueKeyComparator<String,Integer>(hashtagNumber));
+		TreeMap<String, Integer>tmp=new TreeMap<String, Integer>();
+		for(String s:keys){
+		     Integer value = hashtagNumber.get(s);
+		  //   System.out.println(s+" "+value);
+		     tmp.put(s, value);
+		}
+		return tmp;
 	}//getHashtagNumber
 	
 	public void setHashtagNumber(HashMap<String, Integer> hashtagNumber) {
 		this.hashtagNumber = hashtagNumber;
 	}//setHashtagNumber
 	
+	class MapValueKeyComparator<K,V extends Comparable<? super V>> implements Comparator<K> {
+		private Map<K,V> map;
 
+		public MapValueKeyComparator(Map<K,V> map) {
+			this.map = map;
+		}
+		public int compare(K k1, K k2) {
+			V v1 = map.get(k1);
+			V v2 = map.get(k2);
+			return v1.compareTo(v2);
+		}
+	}//MapValueKeyComparator
 	
 }//Iteration

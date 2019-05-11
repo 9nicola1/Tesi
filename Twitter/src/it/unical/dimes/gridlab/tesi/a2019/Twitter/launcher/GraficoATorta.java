@@ -1,6 +1,11 @@
 package it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher;
 
+import java.util.Collection;
+
+import javax.swing.JLabel;
+
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -35,6 +40,7 @@ public class GraficoATorta extends Application{
 		
 		lineChart.getData().add(data);
 		root.getChildren().add(lineChart);
+	
 		
 		primaryStage.setTitle("ANALISI");
 		primaryStage.setScene(scene);

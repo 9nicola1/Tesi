@@ -118,7 +118,11 @@ public class Saving extends SavingAbstract{
 			label = new Label(colonna++, riga, currentTime);
 			wsheet.addCell(label);
 			riga++;
-			saveImageAndVideo(currentDate, media, author,file.getParent());
+			
+			//________________________________________
+			//Attivare per salvare immagini e video
+			//_________________________________________
+		//	saveImageAndVideo(currentDate, media, author,file.getParent());
 		}
 		wworkbook.write();
         wworkbook.close();

@@ -28,6 +28,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private JTextField data;
 	private String pathFile;
 	private PanelTable panelTable;
+	private BarChart barChart;
 	private Saving saving;
 	private JButton avvia;
 	private int clock=15000;
@@ -36,7 +37,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private boolean stop=false;
 	private HashSet<Status>statusSaved=new HashSet<Status>();
 	private ThreadPanel threadPanel=new ThreadPanel();
-	private boolean checkIniziale=false;
+	private boolean checkIniziale=true;
 	private MonitorIteration threadMonitorIteration=null;
 	
 	public ViewController() {
@@ -56,11 +57,12 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	}//setClock
 
 	@Override
-	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable, Saving saving, JButton avvia) {
+	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable,BarChart barChart, Saving saving, JButton avvia) {
 		this.searching=searching;
 		this.listModel=listModel;
 		this.pathFile=pathFile;
 		this.panelTable=panelTable;
+		this.barChart=barChart;
 		this.saving=saving;
 		this.avvia=avvia;
 		normal=true;
@@ -72,7 +74,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	@Override
 	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine,
 			JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable,
-			Saving saving, JButton avvia) {
+			BarChart barChart, Saving saving, JButton avvia) {
 		this.searching=searching;
 		this.listModel=listModel;
 		this.latitudine=latitudine;
@@ -81,6 +83,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 		this.data=data;
 		this.pathFile=pathFile;
 		this.panelTable=panelTable;
+		this.barChart=barChart;
 		this.saving=saving;
 		this.avvia=avvia;
 		normal=false;
@@ -135,7 +138,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 						        saving.saveListOnTXT(tmp, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
 						        if(checkIniziale) {
 							        if(tmp!=null) {
-										threadMonitorIteration=new MonitorIteration(new Iteration((LinkedList<Status>)tmp,5));
+										threadMonitorIteration=new MonitorIteration(new Iteration((LinkedList<Status>)tmp,5), barChart);
 										threadMonitorIteration.start();
 										threadMonitorIteration.check();
 							        }

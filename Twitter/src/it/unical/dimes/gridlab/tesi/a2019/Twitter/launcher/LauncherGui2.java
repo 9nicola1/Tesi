@@ -115,6 +115,7 @@ public class LauncherGui2 extends JFrame {
 	private JPanel advanceResearch=new JPanel();
 	private JTabbedPane tab=new JTabbedPane();
 	private PanelTable panelTable=new PanelTable();
+	private BarChart barChart=new BarChart();
 	private DefaultListModel<String> listModel = new DefaultListModel<>();
 	private DefaultListModel<String> listModelAvanzata = new DefaultListModel<>();
 	private JMenu setting, informazioni;
@@ -392,7 +393,7 @@ public class LauncherGui2 extends JFrame {
 			latitudineLabel.setFont(font3);
 			longitudineLabel.setFont(font3);
 			checkLabel.setForeground(Color.WHITE);
-			GridBagConstraints gbcNR = new GridBagConstraints();
+
 			gbcNR.fill = GridBagConstraints.HORIZONTAL;
 	        gbcNR.gridx = 0;
 	        gbcNR.gridy = 0;
@@ -502,7 +503,9 @@ public class LauncherGui2 extends JFrame {
 			containerDati.add(label);
 			add(panelContainer);
 			
+			//______________________
 			//Aggiornamento con tab	
+			//______________________
 			tab.setBackground(Color.DARK_GRAY);
 			UIManager.put("TabbedPane.selected", new Color(95,95,95));
 			UIManager.put("TabbedPane.focus ", new Color(95,95,95));			
@@ -515,8 +518,20 @@ public class LauncherGui2 extends JFrame {
 			tab.setUI(new BasicTabbedPaneUI());
 			
 			tab.addTab("RISULTATI", panelTable);
-			JButton bu=new JButton("GRafico");
-			tab.addTab("ANALISI",bu);
+
+			JPanel panelAnalisi=new JPanel();
+			panelAnalisi.setLayout(new GridLayout(2,0));
+			panelAnalisi.setBackground(new Color(95,95,95));
+			JPanel tmp=new JPanel();
+			tmp.setBackground(new Color(95,95,95));
+			JLabel labelTmp=new JLabel("HASHTAG ANALIZZATI AD OGNI ITERAZIONE");
+			labelTmp.setFont(new Font("Arial", Font.BOLD,18));
+			labelTmp.setForeground(Color.WHITE);
+			tmp.add(labelTmp);
+			barChart.setBorder(new LineBorder(Color.WHITE, 1));
+			panelAnalisi.add(tmp);
+			panelAnalisi.add(barChart);
+			tab.addTab("ANALISI ITERAZIONE",panelAnalisi);
 			for (int i = 0; i < tab.getComponentCount(); ++i){
 			  tab.setBackgroundAt(i,Color.DARK_GRAY);
 			  tab.setForegroundAt(i, Color.WHITE); 
@@ -733,7 +748,7 @@ public class LauncherGui2 extends JFrame {
 								controller.setStopFalse();
 								stop.setEnabled(true);
 								check.setEnabled(false);
-								controller.normalSearch(searching, listModel, pathFile, panelTable, saving, search);
+								controller.normalSearch(searching, listModel, pathFile, panelTable, barChart, saving, search);
 							}
 						}
 					}});
@@ -751,7 +766,7 @@ public class LauncherGui2 extends JFrame {
 								controller.setStopFalse();
 								stopAvanzata.setEnabled(true);
 								check.setEnabled(false);
-								controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable, saving, searchAvanzata);
+								controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable, barChart, saving, searchAvanzata);
 							}
 						}
 					}});

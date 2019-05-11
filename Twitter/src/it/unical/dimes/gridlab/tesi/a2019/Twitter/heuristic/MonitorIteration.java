@@ -1,22 +1,40 @@
 package it.unical.dimes.gridlab.tesi.a2019.Twitter.heuristic;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeMap;
 
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher.BarChart;
 import twitter4j.Status;
 
 public class MonitorIteration extends Thread {
 	private Iteration iteration;
+	private BarChart barChart;
 	
-	public MonitorIteration(Iteration iteration) {
+	public MonitorIteration(Iteration iteration, BarChart barChart) {
 		this.iteration=iteration;
+		this.barChart=barChart;
 	}//Constructor
 	
 	public void check() {
 		this.iteration.configureIteration();
+		TreeMap<String, Integer>hashtagNumber=this.iteration.getHashtagNumber();
+		if(hashtagNumber.size()!=0) {
+			barChart.removeAllHashtag();
+			barChart.add(hashtagNumber, iteration.getThreshold());
+			barChart.repaint();
+
+		}
 		HashSet<Status>status=null;
 		if(this.iteration.allertHashtag() || this.iteration.allertLocation()) {
 			status=this.iteration.getStatusAfterAllert();
 			System.out.println("TRUE");
+		/*	LinkedList<String>allertHashtag=this.iteration.getAllertHashtag();
+			if(allertHashtag.size()!=0) {
+				
+			}*/
 		}
 		else
 			System.out.println("FALSE");
