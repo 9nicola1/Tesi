@@ -8,9 +8,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.heuristic.Iteration;

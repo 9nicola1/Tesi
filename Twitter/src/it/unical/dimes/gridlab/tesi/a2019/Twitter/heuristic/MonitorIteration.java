@@ -30,14 +30,15 @@ public class MonitorIteration extends Thread {
 		HashSet<Status>status=null;
 		if(this.iteration.allertHashtag() || this.iteration.allertLocation()) {
 			status=this.iteration.getStatusAfterAllert();
-			System.out.println("TRUE");
 		/*	LinkedList<String>allertHashtag=this.iteration.getAllertHashtag();
 			if(allertHashtag.size()!=0) {
 				
 			}*/
 		}
-		else
-			System.out.println("FALSE");
+		
+		//__________________________________________
+		//Qui abbiamo tutti i possibili stati allert
+		//__________________________________________
 		if(status!=null) {
 			for(Status s:status) {
 				System.out.println(s.getText());

@@ -10,7 +10,7 @@ public class Iteration {
 	private int threshold;
 	private HashMap<Location, Integer>geoLocationNumber=new HashMap<Location, Integer>();
 	private HashMap<String, Integer>hashtagNumber=new HashMap<String, Integer>();
-	private HashMap<String, HashSet<String>>mediaAuthor=new HashMap<String, HashSet<String>>();
+//	private HashMap<String, HashSet<String>>mediaAuthor=new HashMap<String, HashSet<String>>();
 	private LinkedList<String>allertHashtag=new LinkedList<String>();
 	private LinkedList<Location>allertLocation=new LinkedList<Location>();
 	
@@ -116,7 +116,7 @@ public class Iteration {
 		for(Status s:this.status) {
 			HashtagEntity[]hashtag=s.getHashtagEntities();
 			GeoLocation geoLocation=s.getGeoLocation();
-			MediaEntity[] media = s.getMediaEntities();
+		//	MediaEntity[] media = s.getMediaEntities();
 			for(HashtagEntity h:hashtag) {
 				if(h!=null) {
 					try {
