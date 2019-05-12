@@ -26,7 +26,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private JTextField data;
 	private String pathFile;
 	private PanelTable panelTable;
-	private BarChart barChart;
+	private DrawGraph barChart;
 	private Saving saving;
 	private JButton avvia;
 	private int clock=15000;
@@ -55,7 +55,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	}//setClock
 
 	@Override
-	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable,BarChart barChart, Saving saving, JButton avvia) {
+	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable,DrawGraph barChart, Saving saving, JButton avvia) {
 		this.searching=searching;
 		this.listModel=listModel;
 		this.pathFile=pathFile;
@@ -72,7 +72,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	@Override
 	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine,
 			JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable,
-			BarChart barChart, Saving saving, JButton avvia) {
+			DrawGraph barChart, Saving saving, JButton avvia) {
 		this.searching=searching;
 		this.listModel=listModel;
 		this.latitudine=latitudine;

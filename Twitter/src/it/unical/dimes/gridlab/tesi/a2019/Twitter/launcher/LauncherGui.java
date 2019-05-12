@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -18,6 +19,7 @@ import java.awt.Color;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -92,7 +94,7 @@ public class LauncherGui extends JFrame {
 	private JPanel advanceResearch=new JPanel();
 	private JTabbedPane tab=new JTabbedPane();
 	private PanelTable panelTable=new PanelTable();
-	private BarChart barChart=new BarChart();
+	private DrawGraph barChart=new DrawGraph(new LinkedList<Integer>());
 	private DefaultListModel<String> listModel = new DefaultListModel<>();
 	private DefaultListModel<String> listModelAvanzata = new DefaultListModel<>();
 	private JMenu setting, informazioni;
@@ -261,6 +263,7 @@ public class LauncherGui extends JFrame {
 		private ImageIcon icone=new ImageIcon(getClass().getResource(url));
 		private JLabel label=new JLabel(icone, JLabel.CENTER);
 		private	JLabel normalLabel=new JLabel(new ImageIcon(getClass().getResource("ricercaStandard.png")));
+		private	JLabel analisiIterazione=new JLabel(new ImageIcon(getClass().getResource("analisiIterazione.png")));
 		private final JList<String> listKey =new JList<String>(listModel);
 		private final JList<String> listKeyAvanzata =new JList<String>(listModelAvanzata);
 		private JScrollPane scrollPane=new JScrollPane(listKey);
@@ -290,6 +293,7 @@ public class LauncherGui extends JFrame {
 			labelAvanzata.setBorder(new LineBorder(Color.WHITE, 1));
 			normalResearch.setBorder(new LineBorder(Color.WHITE, 1));
 			advanceResearch.setBorder(new LineBorder(Color.WHITE, 1));
+			analisiIterazione.setBorder(new LineBorder(Color.WHITE, 1));
 			search.setBorder(new LineBorder(Color.WHITE, 3));	
 			containerDati.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 			containerTable.setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -530,6 +534,7 @@ public class LauncherGui extends JFrame {
 			labelTmp.setFont(new Font("Arial", Font.BOLD,18));
 			labelTmp.setForeground(Color.WHITE);
 			tmp.add(labelTmp);
+			tmp.add(analisiIterazione);
 			barChart.setBorder(new LineBorder(Color.WHITE, 1));
 			panelAnalisiIterazione.add(tmp);
 			panelAnalisiIterazione.add(barChart);

@@ -1,19 +1,23 @@
 package it.unical.dimes.gridlab.tesi.a2019.Twitter.heuristic;
 
-import java.util.HashMap;
+
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher.BarChart;
+
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.launcher.DrawGraph;
 import twitter4j.Status;
 
 public class MonitorIteration extends Thread {
 	private Iteration iteration;
-	private BarChart barChart;
+	private DrawGraph barChart;
 	
-	public MonitorIteration(Iteration iteration, BarChart barChart) {
+	public MonitorIteration(Iteration iteration, DrawGraph barChart) {
+		if(this.barChart!=null)
+			this.barChart.removeAllHashtag();
 		this.iteration=iteration;
 		this.barChart=barChart;
 	}//Constructor
@@ -23,7 +27,20 @@ public class MonitorIteration extends Thread {
 		TreeMap<String, Integer>hashtagNumber=this.iteration.getHashtagNumber();
 		if(hashtagNumber.size()!=0) {
 			barChart.removeAllHashtag();
-			barChart.add(hashtagNumber, iteration.getThreshold());
+			List<Integer>score=new LinkedList<Integer>();
+			List<String>strings=new LinkedList<String>();
+			int occ=0;
+			Set<String> keySet = hashtagNumber.keySet();
+			for(String s:keySet){
+				Integer value = hashtagNumber.get(s);
+				if(value>occ) {
+					score.add(value);
+					strings.add(s);
+					System.out.println(s+" "+value);
+					occ=value;
+				}
+			}
+			barChart.setList(score,strings, occ);
 			barChart.repaint();
 
 		}

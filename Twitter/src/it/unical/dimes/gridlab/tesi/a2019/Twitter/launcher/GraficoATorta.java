@@ -37,6 +37,7 @@ public class GraficoATorta extends Application{
 		data.getData().add(new XYChart.Data<String, Number>("#CALIFORNIA", 80));
 		data.getData().add(new XYChart.Data<String, Number>("#QUAKE", 525));
 		data.getData().add(new XYChart.Data<String, Number>("#ALLARM", 78));
+	
 		
 		lineChart.getData().add(data);
 		root.getChildren().add(lineChart);

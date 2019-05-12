@@ -13,11 +13,17 @@ public class Iteration {
 //	private HashMap<String, HashSet<String>>mediaAuthor=new HashMap<String, HashSet<String>>();
 	private LinkedList<String>allertHashtag=new LinkedList<String>();
 	private LinkedList<Location>allertLocation=new LinkedList<Location>();
+	private int sizeStatus;
 	
 	public Iteration(LinkedList<Status>status, int threshold) {
 		this.status=status;
+		this.sizeStatus=status.size();
 		this.threshold=threshold;
 	}//Constructor
+	
+	public int getSizeIteration() {
+		return this.sizeStatus;
+	}
 	
 	public LinkedList<String> getAllertHashtag() {
 		return allertHashtag;
