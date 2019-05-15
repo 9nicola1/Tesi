@@ -10,11 +10,7 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
-import twitter4j.GeoLocation;
-import twitter4j.HashtagEntity;
-import twitter4j.MediaEntity;
-import twitter4j.Place;
-import twitter4j.Status;
+
 
 public class AccessDataSet {
 	
@@ -41,7 +37,7 @@ public class AccessDataSet {
 	 * @throws WriteException
 	 * @throws BiffException
 	 */
-	public boolean addStatusToDataSet(Status status, DataSet dataSet) throws WriteException, BiffException {
+	public static boolean addStatusToDataSet(ModelTweet model, DataSet dataSet) throws WriteException, BiffException {
 		try{
 			File file=new File(dataSet.getFile());
 			Workbook workbook;
@@ -61,14 +57,15 @@ public class AccessDataSet {
 			int riga=0;
 			if(tmp!=0)riga=tmp+1;
 			Label label=null;
-			String author=status.getUser().getScreenName();
-			String orario=status.getCreatedAt().toString();
-			String tweet=UtilityClassifier.filterToStatus(status.getText());
-			String rt=""+status.getRetweetCount();
-			HashtagEntity[]hashtag=status.getHashtagEntities();
-			MediaEntity[] media = status.getMediaEntities(); 
-			Place place=status.getPlace();
-			GeoLocation geoLocation=status.getGeoLocation();
+			String author=model.getAuthor();
+			String orario=model.getDate();
+			String tweet=UtilityClassifier.filterToStatus(model.getTweet());
+			String rt=""+model.getRt();
+			String[]hashtag=model.getHashtag();
+			String[] media = model.getMedia(); 
+			String place=model.getPlace();
+			String latitudine=model.getLatitude();
+			String longitudine=model.getLongitude();
 			int colonna=0;
 			//Aggiunta Author
 			label = new Label(colonna++, riga, author);
@@ -86,7 +83,7 @@ public class AccessDataSet {
 			if(hashtag.length!=0) {
 				StringBuilder tag=new StringBuilder();
 				for(int i=0; i<hashtag.length; i++) {	
-					tag.append(hashtag[i].getText());
+					tag.append(hashtag[i]);
 					tag.append('\n');
 				}
 				label = new Label(colonna++, riga, tag.toString());
@@ -98,7 +95,7 @@ public class AccessDataSet {
 			if(media.length!=0) {
 				StringBuilder medias=new StringBuilder();
 				for(int i=0; i<media.length; i++) {	
-					medias.append(media[i].getText());
+					medias.append(media[i]);
 					medias.append('\n');
 				}
 				label = new Label(colonna++, riga, medias.toString());
@@ -107,17 +104,19 @@ public class AccessDataSet {
 			else
 				colonna++;
 			//Aggiunta Place
-			if(place!=null ) {
-				label = new Label(colonna++, riga, place.getFullName());
+			if(place!="" ) {
+				label = new Label(colonna++, riga, place);
 				wsheet.addCell(label);
 			}
 			else
 				colonna++;
 			//Aggiunta GeoLocation
-			if(geoLocation!=null) {
-				label = new Label(colonna++, riga, ""+(double) geoLocation.getLatitude());
+			if(latitudine!="") {
+				label = new Label(colonna++, riga, latitudine);
 				wsheet.addCell(label);
-				label = new Label(colonna++, riga, ""+(double)geoLocation.getLongitude());
+			}
+			if(longitudine!="") {
+				label = new Label(colonna++, riga, longitudine);
 				wsheet.addCell(label);
 			}
 			else
@@ -132,10 +131,10 @@ public class AccessDataSet {
 		}
 	}//addStatusToDataSet
 	
-	public ModelTweet[]getDataSetFrom(DataSet dataSet){
+	public static ModelTweet[] getDataSetFrom(DataSet dataSet){
 		ModelTweet[]models=new ModelTweet[1];
 		return models;
 		//TODO
 	}//getDataSetFrom
 
-}
+}//AccessDataSet

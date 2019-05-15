@@ -26,7 +26,8 @@ public class Searching extends SearchingAbstract{
 		try {
 			QueryResult result=twitter.search(query);
 			for(Status s:result.getTweets())
-				list.add(s);	
+				if(s.getLang().equals("en") || s.getLang().equals("it"))
+					list.add(s);	
 		}catch(TwitterException e) {
 			System.out.println("Errore  in getTweetFromHashtagAndLocation "+hashtag);
 			e.printStackTrace();
@@ -54,7 +55,8 @@ public class Searching extends SearchingAbstract{
 		try {
 			QueryResult result=twitter.search(query);
 			for(Status s:result.getTweets())
-				list.add(s);	
+				if(s.getLang().equals("en")|| s.getLang().equals("it"))
+					list.add(s);	
 		}catch(TwitterException e) {
 			System.out.println("Errore  in getTweetFromHashtag "+hashtag);
 			e.printStackTrace();
@@ -73,7 +75,8 @@ public class Searching extends SearchingAbstract{
 			try {
 				QueryResult result=twitter.search(query);
 				for(Status status:result.getTweets())
-					list.add(status);
+					if(status.getLang().equals("en")|| status.getLang().equals("it"))
+						list.add(status);
 			}catch(TwitterException e) {
 				System.out.println("Errore  in getTweetFromListHashtag "+hashtag);
 				e.printStackTrace();
@@ -90,7 +93,8 @@ public class Searching extends SearchingAbstract{
 			try {
 				QueryResult result=twitter.search(query);
 				for(Status status:result.getTweets())
-					list.add(status);
+					if(status.getLang().equals("en")|| status.getLang().equals("it"))
+						list.add(status);
 			}catch(TwitterException e) {
 				System.out.println("Errore  in getTweetFromListHashtag "+hashtag);
 				e.printStackTrace();
