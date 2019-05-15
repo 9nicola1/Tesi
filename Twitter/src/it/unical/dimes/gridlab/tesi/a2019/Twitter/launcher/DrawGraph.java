@@ -15,7 +15,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class DrawGraph extends JPanel {
-   private static int MAX_SCORE = 200;
+   private static int MAX_SCORE = 10;
    private static final int PREF_W = 800;
    private static final int PREF_H = 650;
    private static final int BORDER_GAP = 30;
@@ -109,6 +109,40 @@ public class DrawGraph extends JPanel {
 	         g2.fillOval(x, y, ovalW, ovalH);
 		     g2.setColor(Color.WHITE);
 	         g2.drawString("("+scores.get(i)+")"+strings.get(i), x, y);
+	      }
+	  }else {
+		  super.paintComponent(g);
+	      Graphics2D g2 = (Graphics2D)g;
+	      g2.setColor(Color.WHITE);
+	      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	
+	      double xScale = ((double) getWidth() - 2 * BORDER_GAP) / (MAX_SCORE - 1);
+	      double yScale = ((double) getHeight() - 2 * BORDER_GAP) / (MAX_SCORE - 1);
+	      
+	      g2.drawLine(BORDER_GAP, getHeight() - BORDER_GAP, BORDER_GAP, BORDER_GAP);
+	      g2.drawLine(BORDER_GAP, getHeight() - BORDER_GAP, getWidth() - BORDER_GAP, getHeight() - BORDER_GAP);
+	   // create hatch marks for y axis. 
+	      for (int i = 0; i < Y_HATCH_CNT; i++) {
+	    	 g2.setColor(Color.WHITE);
+	         int x0 = BORDER_GAP-13;
+	         int x1 = GRAPH_POINT_WIDTH + BORDER_GAP-13;
+	         int y0 = getHeight() - (((i + 1) * (getHeight() - BORDER_GAP * 2)) / Y_HATCH_CNT + BORDER_GAP);
+	         int y1 = y0;
+	         g2.drawLine(x0, y0, x1, y1);
+	         g2.setColor(Color.GRAY);
+	         g2.drawLine(x0+13, y0, getWidth()-30, y0);
+	      }
+	
+	      // and for x axis
+	      for (int i = 0; i < MAX_SCORE - 1; i++) {
+	    	 g2.setColor(Color.WHITE);
+	         int x0 = (i + 1) * (getWidth() - BORDER_GAP * 2) / (MAX_SCORE - 1) + BORDER_GAP;
+	         int x1 = x0;
+	         int y0 = getHeight() - BORDER_GAP+6;
+	         int y1 = y0 - GRAPH_POINT_WIDTH+6;
+	         g2.drawLine(x0, y0, x1, y1);
+	         g2.setColor(Color.GRAY);
+	         g2.drawLine(x0, y0-8, x0, getHeight()-y0+7);
 	      }
 	  }
    }

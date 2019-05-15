@@ -112,7 +112,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 						Date currentDate = new Date();
 				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				        String currentTime=sdf.format(currentDate);
-						List<Status>status=searching.getTweetFromListHashtag(listKey, 100);
+						List<Status>status=searching.getTweetFromListHashtag(listKey, 1000);
 				        List<Status>tmp=new LinkedList<Status>();
 				        for(Status s:status) {
 				        	if(!statusSaved.contains(s)) {
@@ -180,7 +180,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 						Date currentDate = new Date();
 				        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				        String currentTime=sdf.format(currentDate);
-				        List<Status>status=searching.getTweetFromListHashtag(listKey, 100, x, y, km, data.getText());
+				        List<Status>status=searching.getTweetFromListHashtag(listKey, 1000, x, y, km, data.getText());
 				        List<Status>tmp=new LinkedList<Status>();
 				        for(Status s:status) {
 				        	if(!statusSaved.contains(s)) {

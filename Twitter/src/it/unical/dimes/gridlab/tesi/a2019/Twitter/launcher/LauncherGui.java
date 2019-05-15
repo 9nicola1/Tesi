@@ -289,13 +289,13 @@ public class LauncherGui extends JFrame {
 			//__________
 			//Set Border
 			//__________
-			normalLabel.setBorder(new LineBorder(Color.WHITE, 1));
-			labelAvanzata.setBorder(new LineBorder(Color.WHITE, 1));
-			normalResearch.setBorder(new LineBorder(Color.WHITE, 1));
+			normalLabel.setBorder(new LineBorder(Color.WHITE, 2, true));
+			labelAvanzata.setBorder(new LineBorder(Color.WHITE, 2, true));
 			advanceResearch.setBorder(new LineBorder(Color.WHITE, 1));
 			analisiIterazione.setBorder(new LineBorder(Color.WHITE, 1));
 			search.setBorder(new LineBorder(Color.WHITE, 3));	
 			containerDati.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+			normalResearch.setBorder(new LineBorder(Color.WHITE, 3, true));
 			containerTable.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 			
 			//________
