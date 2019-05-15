@@ -1,4 +1,4 @@
-package it.unical.dimes.gridlab.tesi.a2019.Twitter.heuristic;
+package it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics;
 
 
 import java.util.HashSet;

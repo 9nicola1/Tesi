@@ -11,9 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import it.unical.dimes.gridlab.tesi.a2019.Twitter.heuristic.Iteration;
-import it.unical.dimes.gridlab.tesi.a2019.Twitter.heuristic.MonitorIteration;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics.Iteration;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics.MonitorIteration;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.taking.Searching;
 import twitter4j.Status;
 

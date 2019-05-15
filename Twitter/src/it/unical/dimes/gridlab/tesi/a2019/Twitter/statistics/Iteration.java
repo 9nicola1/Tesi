@@ -1,4 +1,4 @@
-package it.unical.dimes.gridlab.tesi.a2019.Twitter.heuristic;
+package it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics;
 
 import java.util.*;
 
@@ -10,7 +10,6 @@ public class Iteration {
 	private int threshold;
 	private HashMap<Location, Integer>geoLocationNumber=new HashMap<Location, Integer>();
 	private HashMap<String, Integer>hashtagNumber=new HashMap<String, Integer>();
-//	private HashMap<String, HashSet<String>>mediaAuthor=new HashMap<String, HashSet<String>>();
 	private LinkedList<String>allertHashtag=new LinkedList<String>();
 	private LinkedList<Location>allertLocation=new LinkedList<Location>();
 	private int sizeStatus;
@@ -122,7 +121,6 @@ public class Iteration {
 		for(Status s:this.status) {
 			HashtagEntity[]hashtag=s.getHashtagEntities();
 			GeoLocation geoLocation=s.getGeoLocation();
-		//	MediaEntity[] media = s.getMediaEntities();
 			for(HashtagEntity h:hashtag) {
 				if(h!=null) {
 					try {
@@ -154,16 +152,6 @@ public class Iteration {
 					geoLocationNumber.put(l, 1);
 				}
 			}
-		/*	for(MediaEntity m:media) {
-				if(mediaAuthor.containsKey(s.getUser().getScreenName())) {
-					if(!(mediaAuthor.get(s.getUser().getScreenName())).contains(m.getText())){
-						HashSet<String>newMedia=mediaAuthor.get(s.getUser().getScreenName());
-						newMedia.add(m.getText());
-						mediaAuthor.remove(s.getUser().getScreenName());
-						mediaAuthor.put(s.getUser().getScreenName(), newMedia);
-					}
-				}	
-			}*/
 		}	
 	}//updateIteration
 
