@@ -3,8 +3,8 @@ package it.unical.dimes.gridlab.tesi.a2019.Twitter.classifier2;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.StringTokenizer;
 
-import it.unical.dimes.gridlab.tesi.a2019.Twitter.classifier.UtilityClassifier;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -41,17 +41,40 @@ public class UtilityClassifier {
 	private static final double PROB_PAROLACHIAVENO_SI=0.333333333;
 	private static final double PROB_PAROLACHIAVESI_NO=0;
 	private static final double PROB_PAROLACHIAVENO_NO=1;
+	private static final String[]keyWords= {"magnitudo","magnitude","trema","scossa","quake","shake","epicentro","epicenter","richter"};	
 	
-	
-	public static boolean getKeyAfterHashtag(String tweet) {
-		//TODO
+	/**
+	 * Controlla se subito dopo una parola chiave sono presenti
+	 * i termini "in" oppure "a".
+	 * @param tweet
+	 * @return
+	 */
+	public static boolean containKeyAfterHashtag(String tweet) {
+		tweet.toLowerCase();
+		StringTokenizer st=new StringTokenizer(tweet," ");
+		while(st.hasMoreTokens()) {
+			String key=st.nextToken();
+			if(key.equalsIgnoreCase("earthquake")||key.equalsIgnoreCase("terremoto")) {
+				String tmp=st.nextToken();
+				if(tmp.equalsIgnoreCase("in") ||tmp.equalsIgnoreCase("a"))
+					return true;
+			}			
+		}
 		return false;
-	}
+	}//containKeyAfterHashtag
 
-	public static boolean getKeyWords(String tweet) {
-		// TODO Auto-generated method stub
+	/**
+	 * Controlla se il tweet contiene parole chiavi con riferimenti
+	 * a terremoti.
+	 * @param tweet
+	 * @return True se ne contiene almeno 1, false altrimenti.
+	 */
+	public static boolean containKeyWords(String tweet) {
+		tweet.toLowerCase();
+		for(int i=0; i<keyWords.length; i++) 
+			if(tweet.contains(keyWords[i]))return true;
 		return false;
-	}
+	}//containKeyWords
 
 	
 	/**
@@ -64,7 +87,7 @@ public class UtilityClassifier {
 	 * @param pKeys
 	 * @return
 	 */
-	public static int getProbabilityAlert(String pLength, String pGeoLocation, String pPlace, String pTweet, String pKeys) {
+	public static double getProbabilityAlert(String pLength, String pGeoLocation, String pPlace, String pTweet, String pKeys) {
 		double pLSi, pLNo;
 		if(pLength.equals("Da1a80")) {
 			pLSi=PROB_DA1A80_SI;
@@ -92,7 +115,7 @@ public class UtilityClassifier {
 		double probSi=pLSi*pGSi*pPSi*pCSi*pWSi;
 		double probNo=pLNo*pGNo*pPNo*pCNo*pWNo;
 		
-		int normSi=(int) ((probSi)/(probSi+probNo));
+		double normSi=((probSi)/(probSi+probNo));
 		
 		return normSi;
 	}//getProbabilityAlert
@@ -105,7 +128,7 @@ public class UtilityClassifier {
 			try {
 				 workbook=Workbook.getWorkbook(file);
 				 wworkbook= Workbook.createWorkbook(file,workbook);
-			}catch(FileNotFoundException e) {
+			}catch(FileNotFoundException |BiffException e) {
 				wworkbook= Workbook.createWorkbook(file);
 			}
 			WritableSheet wsheet;
@@ -186,4 +209,4 @@ public class UtilityClassifier {
 		}		
 	}//writeOnFile
 
-}
+}//UtilityClassifier

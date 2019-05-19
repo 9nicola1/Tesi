@@ -24,7 +24,7 @@ public interface ViewControllerInteface {
 	 * @param saving
 	 */
 	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile, PanelTable panelTable,
-			PanelAlert panelAlert, DrawGraph barChart, Saving saving, JButton avvia);
+			PanelAlert panelAlert,PanelAlert panelNoAlert, DrawGraph barChart, Saving saving, JButton avvia);
 	
 	/**
 	 * Questo metodo si occupa di ricercare i dati forniti dall'utente
@@ -39,6 +39,6 @@ public interface ViewControllerInteface {
 	 * @param saving
 	 */
 	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine, JTextField longitudine,
-			JTextField area, JTextField data, String pathFile, PanelTable panelTable,PanelAlert panelAlert, DrawGraph barChart, Saving saving,
+			JTextField area, JTextField data, String pathFile, PanelTable panelTable,PanelAlert panelAlert, PanelAlert panelNoAlert, DrawGraph barChart, Saving saving,
 			JButton avvia);
 }//search

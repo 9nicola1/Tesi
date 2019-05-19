@@ -95,7 +95,8 @@ public class LauncherGui extends JFrame {
 	private JTabbedPane tab=new JTabbedPane();
 	private PanelTable panelTable=new PanelTable();
 	private PanelAlert panelAlert=new PanelAlert();
-	private DrawGraph barChart=new DrawGraph(new LinkedList<Integer>());
+	private PanelAlert panelNoAlert=new PanelAlert();
+	private DrawGraph barChart=new DrawGraph();
 	private DefaultListModel<String> listModel = new DefaultListModel<>();
 	private DefaultListModel<String> listModelAvanzata = new DefaultListModel<>();
 	private JMenu setting, informazioni;
@@ -544,6 +545,7 @@ public class LauncherGui extends JFrame {
 			tab.addTab("ANALISI ITERAZIONE",panelAnalisiIterazione);
 			tab.addTab("ANALISI TOTALE", panelAnalisiTotale);
 			tab.addTab("TWEET ALERT", panelAlert);
+			tab.addTab("TWEET SCARTATI",panelNoAlert);
 			for (int i = 0; i < tab.getComponentCount(); ++i){
 			  tab.setBackgroundAt(i,Color.DARK_GRAY);
 			  tab.setForegroundAt(i, Color.WHITE); 
@@ -760,7 +762,7 @@ public class LauncherGui extends JFrame {
 								controller.setStopFalse();
 								stop.setEnabled(true);
 								check.setEnabled(false);
-								controller.normalSearch(searching, listModel, pathFile, panelTable,panelAlert, barChart, saving, search);
+								controller.normalSearch(searching, listModel, pathFile, panelTable,panelAlert,panelNoAlert, barChart, saving, search);
 							}
 						}
 					}});
@@ -778,7 +780,7 @@ public class LauncherGui extends JFrame {
 								controller.setStopFalse();
 								stopAvanzata.setEnabled(true);
 								check.setEnabled(false);
-								controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable,panelAlert, barChart, saving, searchAvanzata);
+								controller.advanceSearch(searching, listModelAvanzata, latitudine, longitudine, area, giorno, pathFileAvanzata, panelTable,panelAlert,panelNoAlert, barChart, saving, searchAvanzata);
 							}
 						}
 					}});

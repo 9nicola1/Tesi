@@ -81,14 +81,11 @@ public class Iteration {
 	 * @return bolean
 	 */
 	public boolean allertHashtag(){
-		System.out.println("ALLERT HASHTAG");
 		Set<String> keySet = hashtagNumber.keySet();
 		for(String s:keySet){
 		     Integer value = hashtagNumber.get(s);
 		     if(value>=threshold)this.allertHashtag.add(s);
 		}
-		System.out.println(this.hashtagNumber.size());
-		System.out.println(this.allertHashtag.size());
 		return this.allertHashtag.size()>0;
 	}//allertHashtag
 	
@@ -99,14 +96,11 @@ public class Iteration {
 	 * @return boolean
 	 */
 	public boolean allertLocation(){
-		System.out.println("ALLERT LOCATION");
 		Set<Location> keySet = geoLocationNumber.keySet();
 		for(Location l:keySet){
 		     int value = geoLocationNumber.get(l);
 		     if(value>=threshold)this.allertLocation.add(l);
 		}
-		System.out.println(this.geoLocationNumber.size());
-		System.out.println(this.allertLocation.size());
 		return this.allertLocation.size()>0;
 	}//allertLocation
 	

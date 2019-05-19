@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.classifier2.Classifier;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics.Iteration;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics.MonitorIteration;
@@ -27,6 +28,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private String pathFile;
 	private PanelTable panelTable;
 	private PanelAlert panelAlert;
+	private PanelAlert panelNoAlert;
 	private DrawGraph barChart;
 	private Saving saving;
 	private JButton avvia;
@@ -36,6 +38,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	private boolean stop=false;
 	private HashSet<Status>statusSaved=new HashSet<Status>();
 	private ThreadPanel threadPanel=new ThreadPanel();
+	private Classifier classifier=new Classifier();
 	private boolean checkIniziale=true;
 	private MonitorIteration threadMonitorIteration=null;
 	
@@ -57,17 +60,19 @@ public class ViewController extends Thread implements ViewControllerInteface{
 
 	@Override
 	public void normalSearch(Searching searching, DefaultListModel<String> listModel, String pathFile,PanelTable panelTable,
-			PanelAlert panelAlert,DrawGraph barChart, Saving saving, JButton avvia) {
+			PanelAlert panelAlert,PanelAlert panelNoAlert, DrawGraph barChart, Saving saving, JButton avvia) {
 		this.searching=searching;
 		this.listModel=listModel;
 		this.pathFile=pathFile;
 		this.panelTable=panelTable;
 		this.panelAlert=panelAlert;
+		this.panelNoAlert=panelNoAlert;
 		this.barChart=barChart;
 		this.saving=saving;
 		this.avvia=avvia;
 		normal=true;
 		advance=false;
+		classifier.setPanel(panelAlert, panelNoAlert);
 		Thread thread=new Thread(this);
 		thread.start();
 	}//normalSearch
@@ -75,7 +80,7 @@ public class ViewController extends Thread implements ViewControllerInteface{
 	@Override
 	public void advanceSearch(Searching searching, DefaultListModel<String> listModel, JTextField latitudine,
 			JTextField longitudine, JTextField area, JTextField data, String pathFile, PanelTable panelTable,
-			PanelAlert panelAlert, DrawGraph barChart, Saving saving, JButton avvia) {
+			PanelAlert panelAlert,PanelAlert panelNoAlert, DrawGraph barChart, Saving saving, JButton avvia) {
 		this.searching=searching;
 		this.listModel=listModel;
 		this.latitudine=latitudine;
@@ -85,11 +90,13 @@ public class ViewController extends Thread implements ViewControllerInteface{
 		this.pathFile=pathFile;
 		this.panelTable=panelTable;
 		this.panelAlert=panelAlert;
+		this.panelNoAlert=panelNoAlert;
 		this.barChart=barChart;
 		this.saving=saving;
 		this.avvia=avvia;
 		normal=false;
 		advance=true;
+		classifier.setPanel(panelAlert, panelNoAlert);
 		Thread thread=new Thread(this);
 		thread.start();;
 	}//advanceSearch
@@ -138,11 +145,14 @@ public class ViewController extends Thread implements ViewControllerInteface{
 					        if(tmp.size()!=0) {
 						        saving.saveListOnCSV(tmp, pathFile);
 						        saving.saveListOnTXT(tmp, "it.unical.dimes.gridlab.tesi.a2019.Twitter.source\\Staus.txt");
+						        classifier.setDrawGraph(barChart);
+						        classifier.classifierStatus(tmp);
+						    
 						        if(checkIniziale) {
 							        if(tmp!=null) {
-										threadMonitorIteration=new MonitorIteration(new Iteration((LinkedList<Status>)tmp,5), barChart);
-										threadMonitorIteration.start();
-										threadMonitorIteration.check();
+									//	threadMonitorIteration=new MonitorIteration(new Iteration((LinkedList<Status>)tmp,5), barChart);
+									//	threadMonitorIteration.start();
+									//	threadMonitorIteration.check();
 							        }
 								}else
 									checkIniziale=true;

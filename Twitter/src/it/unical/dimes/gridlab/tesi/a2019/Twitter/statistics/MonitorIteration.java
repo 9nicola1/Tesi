@@ -36,7 +36,7 @@ public class MonitorIteration extends Thread {
 				if(value>occ) {
 					score.add(value);
 					strings.add(s);
-					System.out.println(s+" "+value);
+				//	System.out.println(s+" "+value);
 					occ=value;
 				}
 			}
@@ -58,7 +58,7 @@ public class MonitorIteration extends Thread {
 		//__________________________________________
 		if(status!=null) {
 			for(Status s:status) {
-				System.out.println(s.getText());
+			//	System.out.println(s.getText());
 			}
 		}
 	}//update
