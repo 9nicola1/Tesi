@@ -89,9 +89,9 @@ public class Classifier {
 	}//classifierStatus
 	
 	public static void main(String[]args) {
-		String s="earthquake alle test";
+		String s="#earthquake test";
 		String r=(UtilityClassifier.containKeyAfterHashtag(s)==true)?"ChiaveSi":"ChiaveNo";
-		double pAlert=UtilityClassifier.getProbabilityAlert("Da1a80", "GeoSi", "PostoSi",
+		double pAlert=UtilityClassifier.getProbabilityAlert("Da1a80", "GeoNo", "PostoNo",
 				(UtilityClassifier.containKeyAfterHashtag(s)==true)?"ChiaveSi":"ChiaveNo",(UtilityClassifier.containKeyWords(s)==true)?"ParolaChiaveSi":"ParolaChiaveNo");	
 		System.out.println("PROB "+pAlert);
 //		System.out.println(r);
