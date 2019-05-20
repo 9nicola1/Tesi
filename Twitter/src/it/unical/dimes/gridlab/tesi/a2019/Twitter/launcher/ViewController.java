@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import it.unical.dimes.gridlab.tesi.a2019.Twitter.classifier2.Classifier;
+import it.unical.dimes.gridlab.tesi.a2019.Twitter.classifier.Classifier;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.saving.Saving;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics.Iteration;
 import it.unical.dimes.gridlab.tesi.a2019.Twitter.statistics.MonitorIteration;

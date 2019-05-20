@@ -19,7 +19,7 @@ public class PanelAlert extends JPanel{
 	private static final long serialVersionUID = 1L;
 	public String[]columnNames={"AUTORE","DATA POST","STATO","LUOGO", "LATITUDINE", "LONGITUDINE" };
 	public Object[][]data={};
-	private JLabel label=new JLabel(new ImageIcon(getClass().getResource("risultatiRicerca.png")));
+	private JLabel label;
 	private Font font = new Font("Courier", Font.BOLD,22);
 	private Font font2 = new Font("Courier", Font.ITALIC,12);
 	private Font font3 = new Font("Arial", Font.BOLD,12);
@@ -31,7 +31,8 @@ public class PanelAlert extends JPanel{
 		}
 	};;
 	public JTable table=new JTable(dtm);
-	public PanelAlert(){
+	public PanelAlert(JLabel labelLogo){
+		this.label=labelLogo;
 		
 		table.setForeground(Color.DARK_GRAY);
 		setBorder(new LineBorder(Color.DARK_GRAY,3));

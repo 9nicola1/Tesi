@@ -40,14 +40,14 @@ public class DrawGraph extends JPanel {
 	   this.iterazioni.add(numIterazione);
 	   this.alert.add(numAlert);
 	   this.noAlert.add(numNoAlert);
-	   if(this.iterazioni.size()>100) {
+	   if(this.iterazioni.size()>20) {
 		   this.iterazioni.remove(0);
 		   this.alert.remove(0);
 		   this.noAlert.remove(0);
 	   }
 	   this.draw=true;
 	   if(numIterazione>max)max=numIterazione;
-   }
+   }//addTweetIteration
 
    @Override
    protected void paintComponent(Graphics g) {
@@ -129,6 +129,7 @@ public class DrawGraph extends JPanel {
 	         int ovalH = GRAPH_POINT_WIDTH;
 	         g2.fillOval(x, y, ovalW, ovalH);
 		     g2.setColor(Color.WHITE);
+		     g2.drawString("[IT # "+iterazioni.get(i)+"]", x, y);
 	      }
 	      
 	      Stroke oldStrokeAlert = g2.getStroke();
@@ -150,6 +151,8 @@ public class DrawGraph extends JPanel {
 	         int ovalW = GRAPH_POINT_WIDTH;
 	         int ovalH = GRAPH_POINT_WIDTH;
 	         g2.fillOval(x, y, ovalW, ovalH);
+		     g2.setColor(Color.WHITE);
+		     g2.drawString("[P # "+alert.get(i)+"]", x, y);
 	      }
 	      
 	      Stroke oldStrokeNoAlert = g2.getStroke();
@@ -172,6 +175,8 @@ public class DrawGraph extends JPanel {
 	         int ovalW = GRAPH_POINT_WIDTH;
 	         int ovalH = GRAPH_POINT_WIDTH;
 	         g2.fillOval(x, y, ovalW, ovalH);
+		     g2.setColor(Color.WHITE);
+		     g2.drawString("[N # "+noAlert.get(i)+"]", x, y);
 	      }      
 	   //   draw=false;
 	  }else {
@@ -209,11 +214,11 @@ public class DrawGraph extends JPanel {
 	         g2.drawLine(x0, y0-8, x0, getHeight()-y0+7);
 	      }
 	  }
-   }
+   }//paintComponent
 
    @Override
    public Dimension getPreferredSize() {
       return new Dimension(PREF_W, PREF_H);
-   }
+   }//getPreferredSize
 
-}
+}//DrawGraph
